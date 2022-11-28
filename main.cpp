@@ -9,11 +9,12 @@ using namespace std;
 ifstream fin("eval.in");
 ofstream fout("eval.out");
 void back();
+coada infix;
 
 int main()
 {
     back();
-    //Menu();
+    Menu();
     return 0;
 }
 void back() {
@@ -30,9 +31,13 @@ void back() {
         }
     }
     try {
-        cout << valpostfix(postfix);
+        cout << valpostfix(infix);
     }
-    catch (exception e) {
-        cout << e.what();
+    catch (int e) {
+        switch(e) {
+            case -1: cout << "Impartire la zero!"; break;
+            default: cout << "Eroare"; break;
+        }
     }
+    return;
 }

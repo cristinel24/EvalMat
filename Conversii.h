@@ -1,15 +1,15 @@
 #pragma once
 #include <string>
-char operanzi[] = "+-/*()%";
+#include <cmath>
+char operanzi[] = "+-/*()%&|^<>=";
 
 bool operand(string x) { ///returneaza 1 daca se gaseste in lista de operanzi, 0 altfel
 	return strchr(operanzi,x[0]);
 }
 
-void convInfix2Postfix(queue<string>& infix) {
-	stack<string> S;
+void convInfix2Postfix(coada& infix, coada& postfix) {
+	stiva S; string x;
 	init(); /// Initiez prioritatile operanzilor
-	string x;
 	while (!infix.empty()) {
 		x = infix.front(); infix.pop();
 		if (!operand(x)) ///Verific daca nu este operand
@@ -35,11 +35,12 @@ void convInfix2Postfix(queue<string>& infix) {
 	}
 }
 
-double valpostfix(queue<string>& postfix) {
-	convInfix2Postfix(infix); //generez notarea postfixata in coada "postifx"
-	stack<string> S; //Stiva S
+double valpostfix(coada& infix) {
+	coada postfix;
+	convInfix2Postfix(infix, postfix); //generez notarea postfixata in coada "postifx"
+	stiva S; //Stiva S
 	string x, st, dr;
-	double val, valst,valdr;
+	double val, valst, valdr;
 	while (!postfix.empty()) {
 		x = postfix.front(); postfix.pop();
 		if (!operand(x)) ///Verific daca nu este operand
@@ -54,9 +55,18 @@ double valpostfix(queue<string>& postfix) {
 				case '-': val = valst - valdr; break;
 				case '*': val = valst * valdr; break;
 				case '/': 
-					if (valdr == 0) throw new exception("Impartire la zero!");
+					if (valdr == 0) throw -1;
 					val = valst / valdr; break;
 				case '%': val = int(valst) % int(valdr); break;
+				case '|': val = (valst || valdr); break;
+				case '&': val = (valst && valdr); break;
+				case '^': 
+					if ((valst && !valdr) || (!valst && valdr)) val = 1;
+					else val = 0;
+					break;
+				case '<': val = (valst < valdr); break;
+				case '>': val = (valst > valdr); break;
+				case '=': val = (valst == valdr); break;
 			}
 			string val_s = to_string(val); //transform din double in string
 			S.push(val_s); //pun string in stiva
