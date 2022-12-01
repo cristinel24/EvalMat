@@ -24,13 +24,19 @@
     <None Include="eval.out" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Structuri.h">
+    <ClInclude Include="include\Structuri.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Conversii.h">
+    <ClInclude Include="include\Conversii.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Menu.h">
+    <ClInclude Include="include\Menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\string_m.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Arbore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

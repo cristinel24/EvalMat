@@ -1,34 +1,29 @@
 ﻿  main.cpp
-D:\FII\IP\Proiect\Eval\Menu.h(25,43): warning C4305: 'argument': truncation from 'double' to 'T'
+D:\FII\IP\Proiect\Eval\include\string_m.h(13,23): warning C4018: '<': signed/unsigned mismatch
+D:\FII\IP\Proiect\Eval\include\string_m.h(31,23): warning C4018: '<': signed/unsigned mismatch
+D:\FII\IP\Proiect\Eval\include\string_m.h(39,19): warning C4018: '<': signed/unsigned mismatch
+D:\FII\IP\Proiect\Eval\include\string_m.h(116,9): warning C4101: 'i': unreferenced local variable
+D:\FII\IP\Proiect\Eval\include\Menu.h(25,43): warning C4305: 'argument': truncation from 'double' to 'T'
           with
           [
               T=float
           ]
-D:\FII\IP\Proiect\Eval\Menu.h(27,44): warning C4305: 'argument': truncation from 'double' to 'T'
+D:\FII\IP\Proiect\Eval\include\Menu.h(27,44): warning C4305: 'argument': truncation from 'double' to 'T'
           with
           [
               T=float
           ]
-D:\FII\IP\Proiect\Eval\Menu.h(32,43): warning C4305: 'argument': truncation from 'double' to 'T'
+D:\FII\IP\Proiect\Eval\include\Menu.h(32,43): warning C4305: 'argument': truncation from 'double' to 'T'
           with
           [
               T=float
           ]
-D:\FII\IP\Proiect\Eval\Menu.h(34,44): warning C4305: 'argument': truncation from 'double' to 'T'
+D:\FII\IP\Proiect\Eval\include\Menu.h(34,44): warning C4305: 'argument': truncation from 'double' to 'T'
           with
           [
               T=float
           ]
-D:\FII\IP\Proiect\Eval\Menu.h(45,72): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-          with
-          [
-              T=int
-          ]
-          and
-          [
-              T=float
-          ]
-D:\FII\IP\Proiect\Eval\Menu.h(45,48): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\FII\IP\Proiect\Eval\include\Menu.h(45,72): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -37,20 +32,28 @@ D:\FII\IP\Proiect\Eval\Menu.h(45,48): warning C4244: 'argument': conversion from
           [
               T=float
           ]
-D:\FII\IP\Proiect\Eval\Menu.h(50,46): warning C4305: 'argument': truncation from 'double' to 'T'
+D:\FII\IP\Proiect\Eval\include\Menu.h(45,48): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\FII\IP\Proiect\Eval\include\Menu.h(50,46): warning C4305: 'argument': truncation from 'double' to 'T'
           with
           [
               T=float
           ]
-D:\FII\IP\Proiect\Eval\Menu.h(76,31): warning C4305: 'argument': truncation from 'double' to 'T'
+D:\FII\IP\Proiect\Eval\include\Menu.h(76,31): warning C4305: 'argument': truncation from 'double' to 'T'
           with
           [
               T=float
           ]
-D:\FII\IP\Proiect\Eval\Menu.h(78,30): warning C4305: 'argument': truncation from 'double' to 'T'
+D:\FII\IP\Proiect\Eval\include\Menu.h(78,30): warning C4305: 'argument': truncation from 'double' to 'T'
           with
           [
               T=float
           ]
-D:\FII\IP\Proiect\Eval\main.cpp(25,23): warning C4018: '<': signed/unsigned mismatch
   Eval.vcxproj -> D:\FII\IP\Proiect\Eval\Debug\Eval.exe

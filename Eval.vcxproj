@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files\SFML-2.5.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files\SFML-2.5.1\include;./include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,9 +152,11 @@
     <None Include="eval.out" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Conversii.h" />
-    <ClInclude Include="Menu.h" />
-    <ClInclude Include="Structuri.h" />
+    <ClInclude Include="include\Arbore.h" />
+    <ClInclude Include="include\Conversii.h" />
+    <ClInclude Include="include\Menu.h" />
+    <ClInclude Include="include\string_m.h" />
+    <ClInclude Include="include\Structuri.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
