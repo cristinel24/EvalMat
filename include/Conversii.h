@@ -1,16 +1,17 @@
 #pragma once
 #include <string>
 #include <cmath>
-//char operanzi[] = "+-/*()%&|^<>=";
-string operatori[] = {"", "+","-","/","*","(",")","%","&","|","^","<",">","=","xor", ">=", "<="};
 
+bool esteOperator(string);
+void convInfix2Postfix(coada&, coada&);
+double valpostfix(coada&);
 
-bool esteOperator(string x) { ///returneaza 1 daca se gaseste in lista de operanzi, 0 altfel
-	for (int i = 1; i < 17; i++)
-		if (operatori[i].find(x) != string::npos) return 1;
+bool esteOperator(string x) {
+	string operatori[] = { "", "+","-","/","*","(",")","%","&","|","^", ">=", "<=","<",">","=","xor","!="};
+	for (int i = 1; i < 18; i++)
+		if (operatori[i] == x) return 1;
 	return 0;
 }
-
 void convInfix2Postfix(coada& infix, coada& postfix) {
 	stiva S; string x;
 	init(); /// Initiez prioritatile operanzilor
@@ -38,11 +39,9 @@ void convInfix2Postfix(coada& infix, coada& postfix) {
 		S.pop();
 	}
 }
-
 double valpostfix(coada& infix) {
-	coada postfix;
+	coada postfix; 
 	convInfix2Postfix(infix, postfix); //generez notarea postfixata in coada "postifx"
-	//arb_gen(postfix); return 0;
 	stiva S; //Stiva S
 	string x, st, dr;
 	double val, valst, valdr;
@@ -100,11 +99,15 @@ double valpostfix(coada& infix) {
 				if ((valst && !valdr) || (!valst && valdr)) val = 1;
 				else val = 0;
 			}
+			else if (x == "!=") {
+				val = (valst != valdr);
+			}
 			string val_s = to_string(val); //transform din double in string
 			S.push(val_s); //pun string in stiva
 		}
 	}
 	x = S.top(); S.pop();
 	val = stod(x);
+	if (val == -0) val = 0;
 	return val;
 }

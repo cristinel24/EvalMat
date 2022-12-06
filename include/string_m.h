@@ -11,18 +11,23 @@ void parse(string&);
 void init_coada(string x, coada& infix) {
     string aux;
     for (int i = 0; i < x.size(); i++) {
-        while (x[i] < '0' || x[i]>'9')
-            aux += x[i++];
-        if (aux != "" && esteOperator(aux))
-        {
-            infix.push(aux);
-            aux = ""; i--;
-        }
+        if(esteOperator(string(1,x[i])) && (x[i]!='<' && x[i]!='>'))
+            infix.push(string(1, x[i]));
         else {
-            int start = i, lg = 0;
-            while (x[i] >= '0' && x[i] <= '9' || x[i] == '.') { i++, lg++; }
-            string nr = x.substr(start, lg); i--;
-            infix.push(nr);
+            while (x[i] < '0' || x[i]>'9')
+                aux += x[i++];
+            if (aux != "" && esteOperator(aux))
+            {
+                infix.push(aux);
+                aux = ""; i--;
+            }
+            else if (aux != "") throw -4;
+            else {
+                int start = i, lg = 0;
+                while (x[i] >= '0' && x[i] <= '9' || x[i] == '.') { i++, lg++; }
+                string nr = x.substr(start, lg); i--;
+                infix.push(nr);
+            }
         }
     }
 }
@@ -55,7 +60,7 @@ void checkNegative(string& x) {
     //cout << x << '\n';
 }
 void trigo(string& x) {
-    string functions[] = { "sin","cos","tg","round","sqrt","log10" ,"log2" ,"log" , "abs"};
+    string functions[] = { "sin","cos","tg","round","sqrt","lg" ,"log2" ,"ln" , "abs"};
     int size = 10; string aux;
     coada interior;
     checkNegative(x);
@@ -89,7 +94,7 @@ void trigo(string& x) {
                 if (val < 0) throw - 2;
                 val = sqrt(val);
             }
-            else if (functions[i] == "log10") {
+            else if (functions[i] == "lg") {
                 if (val <= 0) throw - 3;
                 val = log10(val);
             }
@@ -97,7 +102,7 @@ void trigo(string& x) {
                 if (val <= 0) throw - 3;
                 val = log2(val);
             }
-            else if (functions[i] == "log") {
+            else if (functions[i] == "ln") {
                 if (val <= 0) throw - 3;
                 val = log(val);
             }

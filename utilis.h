@@ -1,0 +1,71 @@
+#pragma once
+#include "graphics.h"
+#pragma comment(lib,"graphics.lib")
+const DWORD screen_width = GetSystemMetrics(SM_CXSCREEN);
+const DWORD screen_height = GetSystemMetrics(SM_CYSCREEN);
+const double midx = screen_width / 2;
+const double midy = screen_height / 2;
+int last_mouse_x, last_mouse_y, mouse_x, mouse_y, hover_x, hover_y, release_x, release_y;
+bool MainLoop, changeWin;
+
+enum State { INACTIVE, ACTIVE, HOVERED, CLICKED };
+struct Buton {
+	double x, y;
+	double size_x, size_y;
+	State state;
+	colors background, text_color;
+	string text;
+	void changeColor(colors colorbk, colors colortxt) {
+		background = colorbk;
+		text_color = colortxt;
+		setfillstyle(SOLID_FILL, background);
+		setbkcolor(background);
+		settextstyle(6, HORIZ_DIR, 5);
+		rectangle(x, y, x + size_x, y + size_y);
+		floodfill(x + size_x / 2, y + size_y / 2, WHITE);
+		setcolor(text_color);
+		char* textc = _strdup(text.c_str());
+		outtextxy(x + 60, y + 20, textc);
+		setcolor(0);
+		//createButton(x, y, size_x, size_y, text, RED, BLACK);
+	}
+	void createButton(double pozx, double pozy, double size_xx, double size_yy, const string s, colors bkcolor, colors txt_color, double txt_x, double txt_y) {
+		state = ACTIVE;
+		background = bkcolor;
+		text_color = txt_color;
+		x = pozx; y = pozy;
+		size_x = size_xx; size_y = size_yy;
+		text = s;
+		
+		setfillstyle(SOLID_FILL, bkcolor);
+		setbkcolor(bkcolor);
+		setcolor(text_color);
+		settextstyle(6, HORIZ_DIR, 5);
+		rectangle(x, y, x + size_x, y + size_y);
+		floodfill(x + size_x / 2, y + size_y / 2, text_color);
+		char* textc = _strdup(s.c_str());
+		outtextxy(txt_x, txt_y, textc);
+		setcolor(0);
+		setbkcolor(0);
+	}
+	bool contains(int mouse_x, int mouse_y) {
+		return (mouse_x >= x && mouse_x <= x + size_x && mouse_y >= y && mouse_y <= y + size_y);
+	}
+};
+
+struct InputBox {
+	double x, y, size_x, size_y;
+	State state;
+	string text;
+	void createBox(double pozx, double pozy, double top_x, double top_y, bool ctext) {
+		state = ACTIVE;
+		x = pozx; y = pozy; size_x = top_x; size_y = top_y;
+		setfillstyle(SOLID_FILL, WHITE);
+		settextstyle(8, HORIZ_DIR, 4);
+		rectangle(x, y, x + size_x, y + size_y);
+		floodfill(x + size_x / 2, y + size_y / 2, BLACK);
+	}
+	bool contains(int mouse_x, int mouse_y) {
+		return (mouse_x >= x && mouse_x <= x + size_x && mouse_y >= y && mouse_y <= y + size_y);
+	}
+};

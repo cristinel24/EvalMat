@@ -1,59 +1,45 @@
 ﻿  main.cpp
+D:\FII\IP\Proiect\Eval\include\Arbore.h(56,20): warning C4018: '<': signed/unsigned mismatch
 D:\FII\IP\Proiect\Eval\include\string_m.h(13,23): warning C4018: '<': signed/unsigned mismatch
-D:\FII\IP\Proiect\Eval\include\string_m.h(31,23): warning C4018: '<': signed/unsigned mismatch
-D:\FII\IP\Proiect\Eval\include\string_m.h(39,19): warning C4018: '<': signed/unsigned mismatch
-D:\FII\IP\Proiect\Eval\include\string_m.h(116,9): warning C4101: 'i': unreferenced local variable
-D:\FII\IP\Proiect\Eval\include\Menu.h(25,43): warning C4305: 'argument': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-D:\FII\IP\Proiect\Eval\include\Menu.h(27,44): warning C4305: 'argument': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-D:\FII\IP\Proiect\Eval\include\Menu.h(32,43): warning C4305: 'argument': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-D:\FII\IP\Proiect\Eval\include\Menu.h(34,44): warning C4305: 'argument': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-D:\FII\IP\Proiect\Eval\include\Menu.h(45,72): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-          with
-          [
-              T=int
-          ]
-          and
-          [
-              T=float
-          ]
-D:\FII\IP\Proiect\Eval\include\Menu.h(45,48): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-          with
-          [
-              T=int
-          ]
-          and
-          [
-              T=float
-          ]
-D:\FII\IP\Proiect\Eval\include\Menu.h(50,46): warning C4305: 'argument': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-D:\FII\IP\Proiect\Eval\include\Menu.h(76,31): warning C4305: 'argument': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-D:\FII\IP\Proiect\Eval\include\Menu.h(78,30): warning C4305: 'argument': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
+D:\FII\IP\Proiect\Eval\include\string_m.h(36,23): warning C4018: '<': signed/unsigned mismatch
+D:\FII\IP\Proiect\Eval\include\string_m.h(44,19): warning C4018: '<': signed/unsigned mismatch
+D:\FII\IP\Proiect\Eval\include\string_m.h(121,9): warning C4101: 'i': unreferenced local variable
+D:\FII\IP\Proiect\Eval\utilis.h(24,33): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(24,21): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(24,16): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(24,13): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(25,31): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(25,15): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(28,23): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(28,15): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(44,33): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(44,21): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(44,16): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(44,13): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(45,31): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(45,15): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(47,20): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(47,13): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(65,33): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(65,21): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(65,16): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(65,13): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(66,31): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\utilis.h(66,15): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\include\Menu.h(56,83): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\include\Menu.h(56,57): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\include\Menu.h(56,31): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\include\Menu.h(56,20): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\include\Menu.h(64,59): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\include\Menu.h(64,37): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\include\Menu.h(64,26): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+D:\FII\IP\Proiect\Eval\include\Menu.h(64,18): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+graphics.lib(dibutil.obj) : warning LNK4099: PDB 'bgi.pdb' was not found with 'graphics.lib(dibutil.obj)' or at 'D:\FII\IP\Proiect\Eval\Debug\bgi.pdb'; linking object as if no debug info
+graphics.lib(drawing.obj) : warning LNK4099: PDB 'bgi.pdb' was not found with 'graphics.lib(drawing.obj)' or at 'D:\FII\IP\Proiect\Eval\Debug\bgi.pdb'; linking object as if no debug info
+graphics.lib(file.obj) : warning LNK4099: PDB 'bgi.pdb' was not found with 'graphics.lib(file.obj)' or at 'D:\FII\IP\Proiect\Eval\Debug\bgi.pdb'; linking object as if no debug info
+graphics.lib(misc.obj) : warning LNK4099: PDB 'bgi.pdb' was not found with 'graphics.lib(misc.obj)' or at 'D:\FII\IP\Proiect\Eval\Debug\bgi.pdb'; linking object as if no debug info
+graphics.lib(mouse.obj) : warning LNK4099: PDB 'bgi.pdb' was not found with 'graphics.lib(mouse.obj)' or at 'D:\FII\IP\Proiect\Eval\Debug\bgi.pdb'; linking object as if no debug info
+graphics.lib(text.obj) : warning LNK4099: PDB 'bgi.pdb' was not found with 'graphics.lib(text.obj)' or at 'D:\FII\IP\Proiect\Eval\Debug\bgi.pdb'; linking object as if no debug info
+graphics.lib(winbgi.obj) : warning LNK4099: PDB 'bgi.pdb' was not found with 'graphics.lib(winbgi.obj)' or at 'D:\FII\IP\Proiect\Eval\Debug\bgi.pdb'; linking object as if no debug info
+graphics.lib(winthread.obj) : warning LNK4099: PDB 'bgi.pdb' was not found with 'graphics.lib(winthread.obj)' or at 'D:\FII\IP\Proiect\Eval\Debug\bgi.pdb'; linking object as if no debug info
   Eval.vcxproj -> D:\FII\IP\Proiect\Eval\Debug\Eval.exe
