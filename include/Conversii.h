@@ -52,8 +52,13 @@ double valpostfix(coada& infix) {
 		else {
 			dr = S.top(); S.pop();
 			st = S.top(); S.pop();
-			valdr = stod(dr); //transforma din string in double
-			valst = stod(st);
+			try {
+				valdr = stod(dr); //transforma din string in double
+				valst = stod(st);
+			}
+			catch (exception& e){
+				throw invalid_argument("Invalid expression!");
+			}
 
 			if (x == "+") {
 				val = valst + valdr;
@@ -65,7 +70,7 @@ double valpostfix(coada& infix) {
 				val = valst * valdr;
 			}
 			else if (x == "/") {
-				if (valdr == 0) throw - 1;
+				if (valdr == 0) throw invalid_argument("Divided by zero!");
 				val = valst / valdr;
 			}
 			else if (x == "%") {
@@ -102,11 +107,15 @@ double valpostfix(coada& infix) {
 			else if (x == "!=") {
 				val = (valst != valdr);
 			}
+			else {
+				throw invalid_argument("Invalid operator!");
+			}
 			string val_s = to_string(val); //transform din double in string
 			S.push(val_s); //pun string in stiva
 		}
 	}
 	x = S.top(); S.pop();
+	if(S.top()!="") throw invalid_argument("Invalid operator!");
 	val = stod(x);
 	if (val == -0) val = 0;
 	return val;

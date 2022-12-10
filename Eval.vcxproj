@@ -158,6 +158,7 @@
     <ClInclude Include="include\Menu.h" />
     <ClInclude Include="include\string_m.h" />
     <ClInclude Include="include\Structuri.h" />
+    <ClInclude Include="include\menu_back.h" />
     <ClInclude Include="utilis.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

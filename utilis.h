@@ -60,12 +60,57 @@ struct InputBox {
 	void createBox(double pozx, double pozy, double top_x, double top_y, bool ctext) {
 		state = ACTIVE;
 		x = pozx; y = pozy; size_x = top_x; size_y = top_y;
-		setfillstyle(SOLID_FILL, WHITE);
+		setfillstyle(SOLID_FILL, COLOR(40, 41, 43));
 		settextstyle(8, HORIZ_DIR, 4);
 		rectangle(x, y, x + size_x, y + size_y);
 		floodfill(x + size_x / 2, y + size_y / 2, BLACK);
 	}
 	bool contains(int mouse_x, int mouse_y) {
 		return (mouse_x >= x && mouse_x <= x + size_x && mouse_y >= y && mouse_y <= y + size_y);
+	}
+};
+struct Console {
+	double x, y, size_x, size_y;
+	string last_text = "a";
+	State state = INACTIVE;
+	int level;
+	void log(const string sir, colors col = WHITE) {
+		setbkcolor(BLACK);
+		setfillstyle(SOLID_FILL, COLOR(40, 41, 43));
+		setcolor(BLACK);
+		///Sterg consola
+		int levelsir = last_text.size() / 33;
+		for (int i = 0; i < levelsir + 1; i++) {
+			string temp = last_text.substr(i * 33, 33);
+			char* aux = new char[temp.size() + 1];
+			strcpy(aux, temp.c_str());
+			outtextxy(x + 10, y + 10 + (i * 40), aux);
+			delete aux;
+		}
+		
+		setcolor(col);
+		levelsir = sir.size() / 33;
+		if (levelsir > 7) levelsir = 6;
+		for (int i = 0; i < levelsir + 1; i++) {
+			string temp = sir.substr(i * 33, 33);
+			char* aux = new char[temp.size() + 1];
+			strcpy(aux, temp.c_str());
+			outtextxy(x + 10, y + 10 + (i * 40), aux);
+			delete aux;
+		}
+		if (sir.size() > 32) level++;
+		if (level > 6) level = 5;
+		last_text = sir;
+		setbkcolor(COLOR(40, 41, 43));
+	}
+	void setCoord(double pozx, double pozy) {
+		x = pozx; y = pozy;	
+	}
+	void createConsole(double pozx, double pozy, double top_x, double top_y) {
+		state = ACTIVE;
+		x = pozx; y = pozy; size_x = top_x; size_y = top_y;
+		setfillstyle(SOLID_FILL, BLACK);
+		settextstyle(8, HORIZ_DIR, 4);
+		bar(x, y, x + size_x, y + size_y);
 	}
 };

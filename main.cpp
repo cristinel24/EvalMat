@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 
+
 #define NMAX 1024
 using namespace std;
 
@@ -19,14 +20,18 @@ void init_coada(string, coada&);
 
 int main()
 {
-    /*initwindow(screen_width, screen_height, "EvalMath");
-    Menu();*/
-    back();
+    initwindow(screen_width, screen_height, "EvalMath");
+    Menu();
+    /*char s[100];
+    strcpy(s, "x=sin(cos(14))");
+    bool ok = check_variable(s);*/
+    //back();
     return 0;
 }
 void back() {
-    string x;
+    string x, xarb;
     getline(fin, x);
+    xarb = x;
     if (x == "") {
         cout << "Sir inexistent!";
         exit(0);
@@ -36,22 +41,16 @@ void back() {
         init_coada(x, infix);
         cout << valpostfix(infix);
 
-        /// Pentru arbore
-
-        /*arb T = nullptr; string arr[NMAX]; coada postfix;
-        init_coada_arb(x, infix);
+        /* Pentru arbore
+        coada infix, postfix;
+        arb T = nullptr; string arr[NMAX]; coada postfix;
+        init_coada_arb(xarb, infix);
         convInfix2Postfix_arb(infix, postfix);
         T = arb_gen(T, postfix);
         bfs(T, arr);*/
     }
-    catch (int e) {
-        switch(e) {
-            case -1: cout << "Impartire la zero!"; break;
-            case -2: cout << "Radical din numar negativ!"; break;
-            case -3: cout << "Logaritm din numar negativ sau zero!"; break;
-            case -4: cout << "Operator inexistent!"; break;
-            default: cout << "Eroare"; break;
-        }
+    catch (invalid_argument& e) {
+        cout << e.what();
     } 
     return;
 }

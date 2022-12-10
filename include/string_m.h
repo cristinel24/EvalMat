@@ -7,6 +7,7 @@ void spaces(string&);
 void checkNegative(string&);
 void trigo(string&);
 void parse(string&);
+void variables(string&);
 
 void init_coada(string x, coada& infix) {
     string aux;
@@ -14,14 +15,19 @@ void init_coada(string x, coada& infix) {
         if(esteOperator(string(1,x[i])) && (x[i]!='<' && x[i]!='>'))
             infix.push(string(1, x[i]));
         else {
-            while (x[i] < '0' || x[i]>'9')
+            while (x[i] && (x[i] < '0' || x[i]>'9'))
                 aux += x[i++];
             if (aux != "" && esteOperator(aux))
             {
                 infix.push(aux);
                 aux = ""; i--;
             }
-            else if (aux != "") throw -4;
+            else if (aux != "") {
+                if (esteOperator(string(1, aux[aux.size()-1]))) aux = aux.substr(0, aux.size() - 1);
+                string invalid = "'" + aux + "'";
+                invalid += " was not defined!";
+                throw invalid_argument(invalid);
+            }
             else {
                 int start = i, lg = 0;
                 while (x[i] >= '0' && x[i] <= '9' || x[i] == '.') { i++, lg++; }
@@ -46,11 +52,7 @@ void checkNegative(string& x) {
         if (x[0] == '-') {
             aux = "0" + x;
         }
-        else if (x[i] == '-' && x[i - 1] == '-') {
-            aux = x.substr(0, i - 2);
-            aux += x.substr(i, x.size() - i + 2);
-        }
-        else if (x[i] == '-' && esteOperator(string(1,x[i-1]))) {
+        else if (x[i] == '-' && esteOperator(string(1,x[i-1])) && x[i-1]!=')') {
             aux = x.substr(0, i);
             aux += "0";
             aux += x.substr(i, x.size() - i);
@@ -65,14 +67,18 @@ void trigo(string& x) {
     coada interior;
     checkNegative(x);
     for (int i = 0; i < size; i++) {
+        aux = "";
         int poz = x.find(functions[i]);
         if (poz > -1) {
             int start = poz + functions[i].size() + 1, paranteze = 1;
             while (paranteze) {
+                if (start > x.size()) break;
                 if (x[start] == '(') paranteze++;
                 else if (x[start] == ')') paranteze--;
                 if (paranteze) aux += x[start++];
             }
+            if (paranteze) throw invalid_argument("Incorect parenthesis!");
+            if (aux == "") throw invalid_argument("Invalid argument of '" + functions[i] + "'");
             //cout << aux << '\n';
             parse(aux);
             init_coada(aux, interior);
@@ -91,19 +97,19 @@ void trigo(string& x) {
                 val = round(val);
             }
             else if (functions[i] == "sqrt") {
-                if (val < 0) throw - 2;
+                if (val < 0) throw invalid_argument("Square root of negative number!");
                 val = sqrt(val);
             }
             else if (functions[i] == "lg") {
-                if (val <= 0) throw - 3;
+                if (val <= 0) throw invalid_argument("Logarithm of negative number or zero!");
                 val = log10(val);
             }
             else if (functions[i] == "log2") {
-                if (val <= 0) throw - 3;
+                if (val <= 0) throw invalid_argument("Logarithm of negative number or zero!");
                 val = log2(val);
             }
             else if (functions[i] == "ln") {
-                if (val <= 0) throw - 3;
+                if (val <= 0) throw invalid_argument("Logarithm of negative number or zero!");
                 val = log(val);
             }
             else if (functions[i] == "abs") {
@@ -118,8 +124,33 @@ void trigo(string& x) {
 }
 
 void parse(string& x) {
-    int i;
+    int paranteze = 0, i;
+    for (i = 0; i < x.size(); i++)
+        if (x[i] == '(') paranteze++;
+        else if (x[i] == ')') paranteze--;
+    if(paranteze) throw invalid_argument("Incorect parenthesis!");
     spaces(x);
     trigo(x);
     checkNegative(x);
+}
+void variables(string& x) {
+    map<string, double>::reverse_iterator i;
+    for (i = variabile_map.rbegin(); i != variabile_map.rend(); i++) {
+        int state = x.find(i->first);
+        while (state != string::npos) {
+            if (state != -1) x.replace(state, (i->first).size(), "(" + to_string(i->second) + ")");
+            state = x.find(i->first, state + 1);
+        }
+    }
+    int pifind = x.find("pi");
+    while (pifind != string::npos) {
+        x.replace(x.find("pi"), 2, "(" + to_string(3.14159265359) + ")");
+        pifind = x.find("pi", pifind + 1);
+    }
+    int efind = x.find("e");
+    while (efind != string::npos) {
+        x.replace(x.find("e"), 1, "(" + to_string(2.71828182846) + ")");
+        efind = x.find("e", efind + 1);
+    }
+   
 }

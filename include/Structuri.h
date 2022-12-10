@@ -1,7 +1,9 @@
 #pragma once
 #include <map>
+#include "utilis.h"
 
 map<string, int> priot;
+map<string, double> variabile_map;
 
 struct stiva {
 	int vf = 0;
@@ -71,6 +73,11 @@ void init() {
 	priot.insert({ "|", 1 });
 	priot.insert({ "&", 1 });
 	priot.insert({ "xor", 1 });
+	priot.insert({ "<", 2 });
+	priot.insert({ "<=", 2 });
+	priot.insert({ ">", 2 });
+	priot.insert({ ">=", 2 });
+	priot.insert({ "!=", 2 });
 
 	priot.insert({ "cos", 1 });
 	priot.insert({ "sin", 1 });
@@ -82,18 +89,19 @@ void init() {
 	priot.insert({ "lg", 1 });
 	priot.insert({ "abs", 1 });
 
-	priot.insert({ "*", 2 });
+	priot.insert({ "+", 2 });
 	priot.insert({ "-", 2 });
-	priot.insert({ "<", 2 });
-	priot.insert({ ">", 2 });
 
 	priot.insert({ "%", 3 });
 	priot.insert({ "*", 3 });
 	priot.insert({ "/", 3 });
 
-	priot.insert({ "(", 4 });
-	priot.insert({ ")", 4 });
+	priot.insert({ "^", 4 });
 
+	priot.insert({ "(", 5 });
+	priot.insert({ ")", 5 });
 }
 coada infix;
+Console console;
+
 
