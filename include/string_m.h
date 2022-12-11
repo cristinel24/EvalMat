@@ -12,13 +12,24 @@ void variables(string&);
 void init_coada(string x, coada& infix) {
     string aux;
     for (int i = 0; i < x.size(); i++) {
-        if(esteOperator(string(1,x[i])) && (x[i]!='<' && x[i]!='>'))
+        if(esteOperator(string(1,x[i])) && (x[i]!='<' && x[i]!='>' && x[i+1]!='='))
             infix.push(string(1, x[i]));
         else {
-            while (x[i] && (x[i] < '0' || x[i]>'9'))
+            string aux2 = "";
+            while (x[i] && (x[i] < '0' || x[i]>'9') && x[i] != '(') {
+                if (x[i + 1]) {
+                    aux2 = string(1, x[i]) + string(1, x[i + 1]);
+                    if (esteOperator(aux2)) break;
+                }
                 aux += x[i++];
-            if (aux != "" && esteOperator(aux))
+                if (esteOperator(aux)) break;
+            }
+            if (aux != "" && esteOperator(aux) || aux2!="" && esteOperator(aux2))
             {
+                if (aux == "") {
+                    aux = aux2;
+                    i += 2;
+                }
                 infix.push(aux);
                 aux = ""; i--;
             }
@@ -135,8 +146,8 @@ void parse(string& x) {
 }
 void variables(string& x) {
     map<string, double>::reverse_iterator i;
-    for (i = variabile_map.rbegin(); i != variabile_map.rend(); i++) {
-        int state = x.find(i->first);
+    for (i = variabile_map.rbegin(); i != variabile_map.rend(); i++) { ///Ma plimb prin map de la coada la cap
+        int state = x.find(i->first); ///->first inseamna string ul pe care il caut
         while (state != string::npos) {
             if (state != -1) x.replace(state, (i->first).size(), "(" + to_string(i->second) + ")");
             state = x.find(i->first, state + 1);

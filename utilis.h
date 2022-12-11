@@ -57,7 +57,7 @@ struct InputBox {
 	double x, y, size_x, size_y;
 	State state;
 	string text;
-	void createBox(double pozx, double pozy, double top_x, double top_y, bool ctext) {
+	void createBox(double pozx, double pozy, double top_x, double top_y) {
 		state = ACTIVE;
 		x = pozx; y = pozy; size_x = top_x; size_y = top_y;
 		setfillstyle(SOLID_FILL, COLOR(40, 41, 43));
@@ -77,17 +77,17 @@ struct Console {
 	void log(const string sir, colors col = WHITE) {
 		setbkcolor(BLACK);
 		setfillstyle(SOLID_FILL, COLOR(40, 41, 43));
-		setcolor(BLACK);
 		///Sterg consola
+		setcolor(BLACK);
 		int levelsir = last_text.size() / 33;
 		for (int i = 0; i < levelsir + 1; i++) {
 			string temp = last_text.substr(i * 33, 33);
-			char* aux = new char[temp.size() + 1];
+			char* aux = new char[temp.size() + 1]; //inittializez dinamic pentru a putea sterge memoria
 			strcpy(aux, temp.c_str());
 			outtextxy(x + 10, y + 10 + (i * 40), aux);
 			delete aux;
 		}
-		
+		///Scriu in consola sirul curent
 		setcolor(col);
 		levelsir = sir.size() / 33;
 		if (levelsir > 7) levelsir = 6;
@@ -103,14 +103,34 @@ struct Console {
 		last_text = sir;
 		setbkcolor(COLOR(40, 41, 43));
 	}
-	void setCoord(double pozx, double pozy) {
-		x = pozx; y = pozy;	
+	void clear() {
+		///Sterg consola
+		setcolor(BLACK);
+		setbkcolor(BLACK);
+		int levelsir = last_text.size() / 33;
+		for (int i = 0; i < levelsir + 1; i++) {
+			string temp = last_text.substr(i * 33, 33);
+			char* aux = new char[temp.size() + 1];
+			strcpy(aux, temp.c_str());
+			outtextxy(x + 10, y + 10 + (i * 40), aux);
+			delete aux;
+		}
+		setbkcolor(COLOR(40, 41, 43));
 	}
 	void createConsole(double pozx, double pozy, double top_x, double top_y) {
 		state = ACTIVE;
 		x = pozx; y = pozy; size_x = top_x; size_y = top_y;
-		setfillstyle(SOLID_FILL, BLACK);
+		
 		settextstyle(8, HORIZ_DIR, 4);
+
+		///Chenarul albaastru
+		setfillstyle(SOLID_FILL, COLOR(54, 114, 174)); ///culoare asta e culoarea albastru
+		int thickness = 3;
+		bar(x - thickness, y - thickness, x + size_x + thickness, y + size_y + thickness);
+		
+		///desenez consola
+		setfillstyle(SOLID_FILL, BLACK);
 		bar(x, y, x + size_x, y + size_y);
+		
 	}
 };

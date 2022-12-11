@@ -73,11 +73,11 @@ void init() {
 	priot.insert({ "|", 1 });
 	priot.insert({ "&", 1 });
 	priot.insert({ "xor", 1 });
-	priot.insert({ "<", 2 });
-	priot.insert({ "<=", 2 });
-	priot.insert({ ">", 2 });
-	priot.insert({ ">=", 2 });
-	priot.insert({ "!=", 2 });
+	priot.insert({ "<", 1 });
+	priot.insert({ "<=", 1 });
+	priot.insert({ ">", 1 });
+	priot.insert({ ">=", 1 });
+	priot.insert({ "!=", 1 });
 
 	priot.insert({ "cos", 1 });
 	priot.insert({ "sin", 1 });
