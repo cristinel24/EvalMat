@@ -5,7 +5,7 @@ const DWORD screen_width = GetSystemMetrics(SM_CXSCREEN);
 const DWORD screen_height = GetSystemMetrics(SM_CYSCREEN);
 const double midx = screen_width / 2;
 const double midy = screen_height / 2;
-int last_mouse_x, last_mouse_y, mouse_x, mouse_y, hover_x, hover_y, release_x, release_y;
+int last_mouse_x, last_mouse_y, mouse_x, mouse_y, hover_x, hover_y, release_x, release_y, last_hover_x, last_hover_y;
 bool MainLoop, changeWin;
 
 enum State { INACTIVE, ACTIVE, HOVERED, CLICKED };
@@ -29,7 +29,7 @@ struct Buton {
 		setcolor(0);
 		//createButton(x, y, size_x, size_y, text, RED, BLACK);
 	}
-	void createButton(double pozx, double pozy, double size_xx, double size_yy, const string s, colors bkcolor, colors txt_color, double txt_x, double txt_y) {
+	void createButton(double pozx, double pozy, double size_xx, double size_yy, const string s, colors bkcolor, colors txt_color, double txt_x, double txt_y, int text_size) {
 		state = ACTIVE;
 		background = bkcolor;
 		text_color = txt_color;
@@ -40,13 +40,14 @@ struct Buton {
 		setfillstyle(SOLID_FILL, bkcolor);
 		setbkcolor(bkcolor);
 		setcolor(text_color);
-		settextstyle(6, HORIZ_DIR, 5);
+		settextstyle(6, HORIZ_DIR, text_size);
 		rectangle(x, y, x + size_x, y + size_y);
 		floodfill(x + size_x / 2, y + size_y / 2, text_color);
 		char* textc = _strdup(s.c_str());
 		outtextxy(txt_x, txt_y, textc);
 		setcolor(0);
 		setbkcolor(0);
+		settextstyle(8, HORIZ_DIR, 4);
 	}
 	bool contains(int mouse_x, int mouse_y) {
 		return (mouse_x >= x && mouse_x <= x + size_x && mouse_y >= y && mouse_y <= y + size_y);
