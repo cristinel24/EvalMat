@@ -40,6 +40,7 @@ struct coada {
 
 struct node {
 	string val;
+	int niv, col;
 	node* st, * dr;
 };
 typedef node* arb;
@@ -79,15 +80,7 @@ void init() {
 	priot.insert({ ">=", 1 });
 	priot.insert({ "!=", 1 });
 
-	priot.insert({ "cos", 1 });
-	priot.insert({ "sin", 1 });
-	priot.insert({ "tg", 1 });
-	priot.insert({ "log2", 1 });
-	priot.insert({ "ln", 1 });
-	priot.insert({ "sqrt", 1 });
-	priot.insert({ "round", 1 });
-	priot.insert({ "lg", 1 });
-	priot.insert({ "abs", 1 });
+	
 
 	priot.insert({ "+", 2 });
 	priot.insert({ "-", 2 });
@@ -98,8 +91,18 @@ void init() {
 
 	priot.insert({ "^", 4 });
 
-	priot.insert({ "(", 5 });
-	priot.insert({ ")", 5 });
+	priot.insert({ "cos", 5 });
+	priot.insert({ "sin", 5 });
+	priot.insert({ "tg", 5 });
+	priot.insert({ "log2", 5 });
+	priot.insert({ "ln", 5 });
+	priot.insert({ "sqrt", 5 });
+	priot.insert({ "round", 5 });
+	priot.insert({ "lg", 5 });
+	priot.insert({ "abs", 5 });
+
+	priot.insert({ "(", 100 });
+	priot.insert({ ")", 100 });
 }
 coada infix;
 Console console;

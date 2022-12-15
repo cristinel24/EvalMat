@@ -72,7 +72,7 @@ struct InputBox {
 };
 struct Console {
 	double x, y, size_x, size_y;
-	string last_text = "a";
+	string last_text = "$";
 	State state = INACTIVE;
 	int level;
 	void log(const string sir, colors col = WHITE) {

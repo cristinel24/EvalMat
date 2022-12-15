@@ -7,19 +7,26 @@ void init_coada_arb(string, coada&);
 void convInfix2Postfix_arb(coada&, coada&);
 
 arb arb_gen(arb tree, coada postfix) {
+	string oper[] = { "sin","cos" ,"tg" ,"sqrt" ,"round" ,"ln" ,"log2" ,"lg" ,"abs" };
 	stiva_arb st; string x;
 	node* temp1 = nullptr, *temp2= nullptr;
 	while (!postfix.empty()) {
 		x = postfix.front(); postfix.pop();
 		tree = create_node(x);
-		if (!esteOperator(x))
+		if (!esteOperator_arb(x))
 			st.push(tree);	
 		else {
 			temp1 = new node; temp2 = new node;
 			temp1 = st.top(); st.pop();
-			temp2 = st.top(); st.pop();	
+			
+			bool ok = 1;
+			for (int i = 0; i < 9; i++)
+				if (x == oper[i]) { ok = 0; break; }
+			if (ok) { 
+				temp2 = st.top(); st.pop();
+				tree->st = temp2; 
+			}
 			tree->dr = temp1;
-			tree->st = temp2;
 			st.push(tree);
 		}
 	}
@@ -46,7 +53,7 @@ void bfs(arb r, string s[]) {
 	}
 }
 bool esteOperator_arb(string x) { ///returneaza 1 daca se gaseste in lista de operanzi, 0 altfel
-	string operatori[] = { "", "+","-","/","*","(",")","%","&","|","^","<",">","=","xor", ">=", "<=","sin","cos" ,"tg" ,"sqrt" ,"round" ,"ln" ,"log2" ,"lg" ,"abs" };
+	string operatori[] = { "", "+","-","/","*","(",")","%","&","|","^","<",">","=","xor", ">=", "<=", "!=","sin","cos" ,"tg" ,"sqrt" ,"round" ,"ln" ,"log2" ,"lg" ,"abs"};
 	for (int i = 1; i < 26; i++)
 		if (operatori[i] == x) return 1;
 	return 0;
@@ -54,21 +61,41 @@ bool esteOperator_arb(string x) { ///returneaza 1 daca se gaseste in lista de op
 void init_coada_arb(string x, coada& infix) {
 	string aux;
 	for (int i = 0; i < x.size(); i++) {
-		if (esteOperator_arb(string(1, x[i])))
+		if (esteOperator_arb(string(1, x[i])) && (x[i] != '<' && x[i] != '>' && x[i + 1] != '='))
 			infix.push(string(1, x[i]));
 		else {
-			while ((x[i] < '0' || x[i]>'9') && x[i]!='(')
-				aux += x[i++];
-			if (aux != "" && esteOperator_arb(aux))
-			{
-				infix.push(aux);
-				aux = ""; i--;
+			string aux2 = "", variabila = ""; bool isvar = 0; int j;
+			for (j = i; isalpha(x[j]) || x[j] == '_'; j++) {
+				variabila += x[j];
+				isvar = 1;
+			}
+			if (isvar) {
+				infix.push(variabila); i = j - 1;
 			}
 			else {
-				int start = i, lg = 0;
-				while (x[i] >= '0' && x[i] <= '9' || x[i] == '.') { i++, lg++; }
-				string nr = x.substr(start, lg); i--;
-				infix.push(nr);
+				while (x[i] && (x[i] < '0' || x[i]>'9') && x[i] != '(') {
+					if (x[i + 1]) {
+						aux2 = string(1, x[i]) + string(1, x[i + 1]);
+						if (esteOperator_arb(aux2)) break;
+					}
+					aux += x[i++];
+					if (esteOperator_arb(aux)) break;
+				}
+				if (aux != "" && esteOperator_arb(aux) || aux2 != "" && esteOperator_arb(aux2))
+				{
+					if (aux == "") {
+						aux = aux2;
+						i += 2;
+					}
+					infix.push(aux);
+					aux = ""; i--;
+				}
+				else {
+					int start = i, lg = 0;
+					while (x[i] >= '0' && x[i] <= '9' || x[i] == '.') { i++, lg++; }
+					string nr = x.substr(start, lg); i--;
+					infix.push(nr);
+				}
 			}
 		}
 	}

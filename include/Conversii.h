@@ -74,7 +74,8 @@ double valpostfix(coada& infix) {
 				val = valst / valdr;
 			}
 			else if (x == "%") {
-				val = int(valst) % int(valdr);
+				if(valdr == 0) throw invalid_argument("Divided by zero!");
+				val = fmod(valst,valdr);
 			}
 			else if (x == "|") {
 				val = (valst || valdr);

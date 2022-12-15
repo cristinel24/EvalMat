@@ -1,9 +1,17 @@
 #pragma once
+//#define back_color COLOR(40, 41, 43) //culoare backgroundului
+//#define primary COLOR(54, 114, 174) //bleu
+//#define secondary COLOR(236, 160, 64) //orange
 bool check_variable(char*);
 void delete_var(char*);
 void delete_variables();
+void nivels(arb, int);
+void columns(arb, int, int, int&);
+void draw(string, int, int, int, int);
 
-
+int get_max_level(arb);
+int get_max_column(arb);
+int offset = 30;
 
 bool check_variable(char* s) {
 	///Copiez in sirul 'variabila' variabila
@@ -37,6 +45,12 @@ bool check_variable(char* s) {
 		}
 	}
 	coada infix; string val_s = valoare, var_s = variabila;
+
+	string reserved_words[] = { "e", "pi", "sin","cos","tg","round","sqrt","lg" ,"log2" ,"ln" , "abs" };
+
+	for (int i = 0; i < 11; i++)
+		if (reserved_words[i] == var_s) throw invalid_argument(string("'" + var_s + "' is a reserved word!"));
+	
 	
 	double val = INFINITE;
 	try {
@@ -68,3 +82,80 @@ void delete_var(char* s) {
 void delete_variables() {
 	variabile_map.erase(variabile_map.begin(), variabile_map.end());
 }
+string one[] = { "sin","cos","tg","round","sqrt","lg" ,"log2" ,"ln" , "abs" };
+int get_max_level(arb a) {
+	if (a == NULL) return 0;
+	int n1 = get_max_level(a->st);
+	int n2 = get_max_level(a->dr);
+	return 1 + max(n1, n2);
+}
+int get_max_column(arb a) {
+	if (a == NULL) return 0;
+	int n1 = get_max_column(a->st);
+	int n2 = get_max_column(a->dr);
+	return 1 + n1 + n2;
+}
+
+arb initArb(string xarb) {
+	coada infix, postfix;
+	arb T = nullptr; string arr[NMAX];
+	init_coada_arb(xarb, infix);
+	convInfix2Postfix_arb(infix, postfix);
+	return arb_gen(T, postfix);
+}
+
+void nivels(arb a, int nivel) {
+	if (a != NULL) {
+		a->niv = nivel;
+		nivels(a->st, nivel + 1);
+		nivels(a->dr, nivel + 1);
+	}
+}
+void columns(arb a, int n_size, int c_size, int& contor) {
+	setlinestyle(0, SOLID_LINE, 10);
+	setcolor(COLOR(236, 160, 64));
+	if (a != NULL) {
+		columns(a->st, n_size, c_size, contor);
+
+		draw(a->val, a->niv, ++contor, n_size, c_size);
+		/*for (int i = 0; i < 9; i++)
+			if (a->val == one[i]) {
+				--contor; break;
+			}*/
+		a->col = contor;
+		columns(a->dr, n_size, c_size, contor);
+	}
+}
+void linii(arb a, int n_size, int c_size) {
+	setlinestyle(0, SOLID_LINE, 5);
+	setcolor(COLOR(236, 160, 64));
+	
+	if (a != NULL) {
+		if (a->st) line(a->col * c_size - c_size / 2 - offset, a->niv * n_size - n_size / 2 + offset, a->st->col * c_size - c_size / 2 + offset, a->st->niv * n_size - n_size / 2 - offset);
+		int was_special = 0;
+		/*for (int i = 0; i < 9; i++)
+			if (a->val == one[i]) {
+				line(a->col * c_size - c_size / 2, a->niv * n_size - n_size / 2 + offset, a->col * c_size - c_size / 2, a->dr->niv * n_size - n_size / 2 - offset);
+				was_special = 1; break;
+			}*/	
+
+		if (!was_special)
+			if (a->dr) line(a->col * c_size - c_size / 2 + offset, a->niv * n_size - n_size / 2 + offset, a->dr->col * c_size - c_size / 2 - offset, a->dr->niv * n_size - n_size / 2 - offset);
+
+		linii(a->st, n_size, c_size);
+		linii(a->dr, n_size, c_size);
+	}
+}
+void draw(string s, int niv, int col, int n_size, int c_size) {
+	setfillstyle(SOLID_FILL, COLOR(54, 114, 174));
+	int xc = col * c_size - c_size / 2, yc = niv * n_size - n_size / 2;
+	setcolor(COLOR(54, 114, 174));
+	setlinestyle(0, SOLID_LINE, 2);
+	ellipse(xc, yc, 0, 360, 40, 20);
+	setbkcolor(COLOR(40, 41, 43)); setcolor(COLOR(236, 160, 64));
+	outtextxy(xc  - 5, yc - 5, _strdup(s.c_str()));
+
+	setcolor(COLOR(236, 160, 64));
+}
+
+

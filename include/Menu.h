@@ -5,30 +5,67 @@
 #define secondary COLOR(236, 160, 64) //orange
 void Menu();
 void MainGame();
+void desenArb(string);
 
 void Menu() {
 	cleardevice();
 	readimagefile("./Resources/Images/background_logo.jpg", 0, 0, screen_width, screen_height);
 	MainLoop = true;
+
 	Buton start, exit_b;
-	start.createButton(midx-120, midy+100, 300, 75, "START", colors(COLOR(236, 160, 64)), BLACK, midx-60, midy+120);
-	exit_b.createButton(midx-120, midy+200, 300, 75, "EXIT", colors(COLOR(236, 160, 64)), BLACK, midx-35, midy+220);
+	start.createButton(midx-120, midy+100, 300, 75, "START", colors(COLOR(236, 160, 64)), colors(COLOR(30, 63, 97)), midx-60, midy+117, 5);
+	exit_b.createButton(midx-120, midy+200, 300, 75, "EXIT", colors(COLOR(236, 160, 64)), colors(COLOR(30, 63, 97)), midx-35, midy+217, 5);
 	
+	int offset = 2; ///cati pixeli merg in spate
+
 	while (MainLoop) {
 		getmouseclick(WM_LBUTTONUP, release_x, release_y);
-		
-		if (release_x >= start.x && release_x <= start.x + start.size_x && release_y >= start.y && release_y <= start.y + start.size_y)
+
+		///Hover
+		getmouseclick(WM_MOUSEMOVE, hover_x, hover_y);
+		if (hover_x != -1 && hover_y != -1 && (hover_x != last_hover_x || hover_y != last_hover_y)) {
+			last_hover_x = hover_x;
+			last_hover_y = hover_y;
+		}
+		///Start Hover
+		if (start.contains(last_hover_x, last_hover_y)) {
+			setlinestyle(0, SOLID_LINE, 10);
+			setcolor(primary);
+			rectangle(start.x - offset, start.y - offset, start.x + start.size_x + offset, start.y + start.size_y + offset);
+			setlinestyle(0, SOLID_LINE, 1);
+		}
+		else {
+			setlinestyle(0, SOLID_LINE, 10);
+			setcolor(back_color);
+			rectangle(start.x - offset, start.y - offset, start.x + start.size_x + offset, start.y + start.size_y + offset);
+			setlinestyle(0, SOLID_LINE, 1);
+		}
+		///Exit Hover
+		if (exit_b.contains(last_hover_x, last_hover_y)) {
+			setlinestyle(0, SOLID_LINE, 10);
+			setcolor(primary);
+			rectangle(exit_b.x - offset, exit_b.y - offset, exit_b.x + exit_b.size_x + offset, exit_b.y + exit_b.size_y + offset);
+			setlinestyle(0, SOLID_LINE, 1);
+		}
+		else {
+			setlinestyle(0, SOLID_LINE, 10);
+			setcolor(back_color);
+			rectangle(exit_b.x - offset, exit_b.y - offset, exit_b.x + exit_b.size_x + offset, exit_b.y + exit_b.size_y + offset);
+			setlinestyle(0, SOLID_LINE, 1);
+		}
+
+		if (start.contains(release_x, release_y))
 		{
-			changeWin = 1; break;
+			MainGame();
+			cleardevice();
+			readimagefile("./Resources/Images/background_logo.jpg", 0, 0, screen_width, screen_height);
+			start.createButton(midx - 120, midy + 100, 300, 75, "START", colors(COLOR(236, 160, 64)), colors(COLOR(30, 63, 97)), midx - 60, midy + 117, 5);
+			exit_b.createButton(midx - 120, midy + 200, 300, 75, "EXIT", colors(COLOR(236, 160, 64)), colors(COLOR(30, 63, 97)), midx - 35, midy + 217, 5);
 		}
 		if (exit_b.contains(release_x, release_y)) {
 			closegraph();
 			exit(0);
 		}
-	}
-	if (changeWin) {
-		MainGame();
-		exit(0);
 	}
 }
 
@@ -36,42 +73,90 @@ void MainGame() {
 
 	cleardevice();
 	readimagefile("./Resources/Images/main.jpg", 0, 0, screen_width, screen_height);
-	MainLoop = true;
+	MainLoop = true; 
+	int offset = 2; 
 
 	InputBox box_var, box_ecuatie;
-	Buton back; 
-	back.createButton(80, 50, 200, 70, "BACK", colors(COLOR(59, 125, 186)), BLACK, 95, 60);
+	Buton back, arbbuton; 
+	back.createButton(100, 50, 150, 60, "BACK", colors(back_color), colors(secondary), 115, 65, 4);
 	box_var.createBox(350, 170, 500, 700);
 	box_ecuatie.createBox(900, 170, 700, 300);
 	console.createConsole(900, 540, 700, 330); ///Console e in structuri.h (e globala)
+	arbbuton.createButton(1400, 480, 190, 50, "TREE", colors(back_color), colors(secondary), 1435, 490, 4);
 
 	setcolor(secondary); setbkcolor(back_color);
 
 	char* text = _strdup("Define variables here..."); ///_strdup converteste un const sir in pointer
-	outtextxy(360, 130, text); ///
+	outtextxy(360, 130, text); 
 	text = _strdup("Write equations here...");
 	outtextxy(910, 130, text);
 	text = _strdup("Console:");
 	outtextxy(910, 500, text);
 
-	char inputbuf[128][1024] = { "" }, expresie[128][1024] = {""}, temp[NMAX], c;
+	char** inputbuf = new char* [20], **expresie = new char* [20], temp[NMAX], c;
 	int input_pos = 0, expresie_pos = 0, level = 0, levelec=0;
-	string aux; coada infix;
+	string aux, expr_s; coada infix;
 	double val_expression;
-	bool ok_variable, ok_expression = 1, was_ecuation = 0, changeWin = 0;
+	bool ok_variable, ok_expression = 1, was_ecuation = 0, changeWin = 0, ok_for_arb = 0;
+
+	for (int i = 0; i < 20; i++) {
+		inputbuf[i] = new char[50]{};
+		expresie[i] = new char[50]{};
+	}
 
 	while (MainLoop) {
 		getmouseclick(WM_LBUTTONDOWN, mouse_x, mouse_y);
 		///functia getmouseclick se activeaza doar in milisecunda cand apas click, 
 		//iar in rest returneaza valoarea -1
+
 		if (mouse_x != -1 && mouse_y != -1 && (mouse_x != last_mouse_x || mouse_y != last_mouse_y)) {
 			last_mouse_x = mouse_x;
 			last_mouse_y = mouse_y;
 		}
 		///Cand apas click sa fie click uit mereu (last_mouse_x && (last_mouse_y)
 		
+		///Hover
+		getmouseclick(WM_MOUSEMOVE, hover_x, hover_y);
+		if (hover_x != -1 && hover_y != -1 && (hover_x != last_hover_x || hover_y != last_hover_y)) {
+			last_hover_x = hover_x;
+			last_hover_y = hover_y;
+		}
+		///Back Hover
+		if (back.contains(last_hover_x, last_hover_y)) {
+			setlinestyle(0, SOLID_LINE, 6);
+			setcolor(primary);
+			rectangle(back.x - offset, back.y - offset, back.x + back.size_x + offset, back.y + back.size_y + offset);
+			setlinestyle(0, SOLID_LINE, 1);
+		}
+		else {
+			setlinestyle(0, SOLID_LINE, 6);
+			setcolor(back_color);
+			rectangle(back.x - offset, back.y - offset, back.x + back.size_x + offset, back.y + back.size_y + offset);
+			setlinestyle(0, SOLID_LINE, 1);
+		}
+		///Arbore Hover
+		if (arbbuton.contains(last_hover_x, last_hover_y)) {
+			setlinestyle(0, SOLID_LINE, 6);
+			setcolor(primary);
+			rectangle(arbbuton.x - offset, arbbuton.y - offset, arbbuton.x + arbbuton.size_x + offset, arbbuton.y + arbbuton.size_y + offset);
+			setlinestyle(0, SOLID_LINE, 1);
+		}
+		else {
+			setlinestyle(0, SOLID_LINE, 6);
+			setcolor(back_color);
+			rectangle(arbbuton.x - offset, arbbuton.y - offset, arbbuton.x + arbbuton.size_x + offset, arbbuton.y + arbbuton.size_y + offset);
+			setlinestyle(0, SOLID_LINE, 1);
+		}
+
 		if (back.contains(last_mouse_x, last_mouse_y)) {
 			changeWin = 1; break;
+		}
+		if (arbbuton.contains(last_mouse_x, last_mouse_y) && ok_for_arb) {
+			int current_window = getcurrentwindow();
+			cout << temp<<'\n';
+			desenArb(temp); // <- aici fac un new window
+			setcurrentwindow(current_window);
+			last_mouse_x = last_mouse_y = 0;
 		}
 
 		/// <summary>
@@ -79,17 +164,17 @@ void MainGame() {
 		if (box_var.contains(last_mouse_x, last_mouse_y)) {
 			box_var.state = CLICKED;
 			setcolor(primary);
-			setlinestyle(0, 0, 3);
+			setlinestyle(0, SOLID_LINE, 3);
 			rectangle(box_var.x+1, box_var.y + 1, box_var.x + box_var.size_x - 1, box_var.y + box_var.size_y - 1);
 			setcolor(WHITE);
-			setlinestyle(0, 0, 1);
+			setlinestyle(0, SOLID_LINE, 1);
 		}
 		else {
 			box_var.state = ACTIVE;
-			setlinestyle(0, 0, 10);
+			setlinestyle(0, SOLID_LINE, 10);
 			setcolor(back_color);
 			rectangle(box_var.x, box_var.y, box_var.x + box_var.size_x, box_var.y + box_var.size_y );
-			setlinestyle(0, 0, 1);
+			setlinestyle(0, SOLID_LINE, 1);
 
 		}
 		if (box_var.state == CLICKED) {
@@ -97,7 +182,7 @@ void MainGame() {
 			do {
 				ok = true;
 				aux = string(to_string(level + 1) + ".");
-				char s[] = "";
+				char s[10] = "";
 				strcpy(s, aux.c_str());
 				outtextxy(360, 180 + (level * 40), s);
 				outtextxy(420, 180 + (level * 40), inputbuf[level]);
@@ -127,7 +212,7 @@ void MainGame() {
 
 						///Scriu nivelul levelui cu back_color ca sa il sterg
 						aux = string(to_string(level + 1) + ".");
-						char s[] = "";
+						char s[10] = "";
 						strcpy(s, aux.c_str());
 						setcolor(back_color);
 						outtextxy(360, 180 + (level * 40), s);
@@ -137,12 +222,13 @@ void MainGame() {
 							level--;
 							//Scriu nivelul curent
 							aux = string(to_string(level + 1) + ".");
-							char s[] = "";
+							char s[10] = "";
 							strcpy(s, aux.c_str());
 
 							setcolor(back_color);
 							//Sterg variabila din memorie
 							delete_var(inputbuf[level]);
+							
 
 							///Sterg poza "X" sau "Check" din stanga variabilei
 							setfillstyle(SOLID_FILL, back_color);
@@ -280,9 +366,8 @@ void MainGame() {
 						for(int j=0; j<levelec + 1; j++)
 							strcat(temp, expresie[j]);
 						if (strlen(temp) == 0) throw invalid_argument("No string to evaluate!");
-
-						string expr_s = temp;
-						//cout << expr_s << ' ' << expr_s.size()<< '\n';
+						while (!infix.empty()) infix.pop();
+						expr_s = temp;
 						variables(expr_s); ///inlocuiesc fiecare variabila
 						parse(expr_s);
 						init_coada(expr_s, infix);
@@ -293,9 +378,11 @@ void MainGame() {
 						string err = "Error: " + string(e.what());
 						console.log(err, colors(COLOR(236, 160, 64)));
 						ok_expression = 0;
+						ok_for_arb = 0;
 					}
 					if (ok_expression) {
 						console.log(to_string(val_expression));
+						ok_for_arb = 1;
 					}
 					break;
 
@@ -318,6 +405,25 @@ void MainGame() {
 	if (changeWin) {
 		last_mouse_x = last_mouse_y = 0;
 		delete_variables();
-		Menu(); exit(0);
+		delete []inputbuf;
+		delete []expresie;
+		return;
 	}
+}
+
+void desenArb(string x) {
+	int window = initwindow(screen_width, screen_height, "Arbore");
+	cleardevice();
+	arb T = initArb(x);
+	nivels(T, 1);
+	int contor = 0;
+	setfillstyle(SOLID_FILL, back_color);
+	bar(0, 0, screen_width, screen_height);
+
+	columns(T, screen_height / get_max_level(T), screen_width / get_max_column(T), contor);
+	linii(T, screen_height / get_max_level(T), screen_width / get_max_column(T));
+	getch();
+	//delete T;
+	closegraph(window);
+	return;
 }

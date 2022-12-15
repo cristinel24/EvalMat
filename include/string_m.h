@@ -63,7 +63,7 @@ void checkNegative(string& x) {
         if (x[0] == '-') {
             aux = "0" + x;
         }
-        else if (x[i] == '-' && esteOperator(string(1,x[i-1])) && x[i-1]!=')') {
+        else if (x[i] == '-' && esteOperator(string(1, x[i - 1])) && x[i - 1]!=')') {
             aux = x.substr(0, i);
             aux += "0";
             aux += x.substr(i, x.size() - i);
@@ -78,58 +78,61 @@ void trigo(string& x) {
     coada interior;
     checkNegative(x);
     for (int i = 0; i < size; i++) {
-        aux = "";
         int poz = x.find(functions[i]);
-        if (poz > -1) {
-            int start = poz + functions[i].size() + 1, paranteze = 1;
-            while (paranteze) {
-                if (start > x.size()) break;
-                if (x[start] == '(') paranteze++;
-                else if (x[start] == ')') paranteze--;
-                if (paranteze) aux += x[start++];
+        while(poz != string::npos) {
+            if (poz > -1) {
+                aux = "";
+                int start = poz + functions[i].size() + 1, paranteze = 1;
+                while (paranteze) {
+                    if (start > x.size()) break;
+                    if (x[start] == '(') paranteze++;
+                    else if (x[start] == ')') paranteze--;
+                    if (paranteze) aux += x[start++];
+                }
+                if (paranteze) throw invalid_argument("Incorect parenthesis!");
+                if (aux == "") throw invalid_argument("Invalid argument of '" + functions[i] + "'");
+                //cout << aux << '\n';
+                parse(aux);
+                init_coada(aux, interior);
+                double val = valpostfix(interior);
+                //cout << val << '\n';
+                if (functions[i] == "sin") {
+                    val = sin(val * pi / 180);
+                }
+                else if (functions[i] == "cos") {
+                    val = cos(val * pi / 180);
+                }
+                else if (functions[i] == "tg") {
+                    val = tan(val * pi / 180);
+                }
+                else if (functions[i] == "round") {
+                    val = round(val);
+                }
+                else if (functions[i] == "sqrt") {
+                    if (val < 0) throw invalid_argument("Square root of negative number!");
+                    val = sqrt(val);
+                }
+                else if (functions[i] == "lg") {
+                    if (val <= 0) throw invalid_argument("Logarithm of negative number or zero!");
+                    val = log10(val);
+                }
+                else if (functions[i] == "log2") {
+                    if (val <= 0) throw invalid_argument("Logarithm of negative number or zero!");
+                    val = log2(val);
+                }
+                else if (functions[i] == "ln") {
+                    if (val <= 0) throw invalid_argument("Logarithm of negative number or zero!");
+                    val = log(val);
+                }
+                else if (functions[i] == "abs") {
+                    val = abs(val);
+                }
+                string val_s = to_string(val);
+                x.replace(poz, start - poz + 1, val_s);
+                checkNegative(x);
+                //cout << x;
             }
-            if (paranteze) throw invalid_argument("Incorect parenthesis!");
-            if (aux == "") throw invalid_argument("Invalid argument of '" + functions[i] + "'");
-            //cout << aux << '\n';
-            parse(aux);
-            init_coada(aux, interior);
-            double val = valpostfix(interior);
-            //cout << val << '\n';
-            if (functions[i] == "sin") {
-                val = sin(val * pi / 180);
-            }
-            else if (functions[i] == "cos") {
-                val = cos(val * pi / 180);
-            }
-            else if (functions[i] == "tg") {
-                val = tan(val * pi / 180);
-            }
-            else if (functions[i] == "round") {
-                val = round(val);
-            }
-            else if (functions[i] == "sqrt") {
-                if (val < 0) throw invalid_argument("Square root of negative number!");
-                val = sqrt(val);
-            }
-            else if (functions[i] == "lg") {
-                if (val <= 0) throw invalid_argument("Logarithm of negative number or zero!");
-                val = log10(val);
-            }
-            else if (functions[i] == "log2") {
-                if (val <= 0) throw invalid_argument("Logarithm of negative number or zero!");
-                val = log2(val);
-            }
-            else if (functions[i] == "ln") {
-                if (val <= 0) throw invalid_argument("Logarithm of negative number or zero!");
-                val = log(val);
-            }
-            else if (functions[i] == "abs") {
-                val = abs(val);
-            }
-            string val_s = to_string(val);
-            x.replace(poz, start - poz + 1, val_s);
-            checkNegative(x);
-            //cout << x;
+            poz = x.find(functions[i], poz + 1);
         }
     }
 }
@@ -147,7 +150,7 @@ void parse(string& x) {
 void variables(string& x) {
     map<string, double>::reverse_iterator i;
     for (i = variabile_map.rbegin(); i != variabile_map.rend(); i++) { ///Ma plimb prin map de la coada la cap
-        int state = x.find(i->first); ///->first inseamna string ul pe care il caut
+        int state = x.find(i->first); 
         while (state != string::npos) {
             if (state != -1) x.replace(state, (i->first).size(), "(" + to_string(i->second) + ")");
             state = x.find(i->first, state + 1);
