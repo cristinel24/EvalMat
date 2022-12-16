@@ -65,7 +65,7 @@ void init_coada_arb(string x, coada& infix) {
 			infix.push(string(1, x[i]));
 		else {
 			string aux2 = "", variabila = ""; bool isvar = 0; int j;
-			for (j = i; isalpha(x[j]) || x[j] == '_'; j++) {
+			for (j = i; isalpha(x[j]) || x[j] == '_' || (x[j]== '2' && j>0 && x[j-1]=='g'); j++) {
 				variabila += x[j];
 				isvar = 1;
 			}
@@ -97,6 +97,14 @@ void init_coada_arb(string x, coada& infix) {
 					infix.push(nr);
 				}
 			}
+		}
+	}
+	for (int i = 0; i < infix.size(); i++) {
+		if (infix.c[i] == "-" && i == 0 || infix.c[i] == "-" && esteOperator(infix.c[i - 1])) {
+			infix.c[i] = to_string(0 - stod(infix.c[i + 1]));
+			for (int j = i + 1; j < infix.size(); j++)
+				infix.c[j] = infix.c[j + 1];
+			infix.c[infix.size()] = "";
 		}
 	}
 }

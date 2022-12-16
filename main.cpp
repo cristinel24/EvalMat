@@ -20,7 +20,7 @@ void init_coada(string, coada&);
 
 int main()
 {
-    initwindow(screen_width, screen_height, "EvalMath");
+    initwindow(screen_width, screen_height, "", 0, 0, 0, 0);
     Menu();
     /*char s[100];
     strcpy(s, "x=sin(cos(14))");
@@ -37,17 +37,17 @@ void back() {
         exit(0);
     }
     try {
-        parse(x);
+        /*parse(x);
         init_coada(x, infix);
-        cout << valpostfix(infix);
+        cout << valpostfix(infix);*/
 
         // Pentru arbore
-       /* coada infix, postfix;
+        coada infix, postfix;
         arb T = nullptr; string arr[NMAX];
         init_coada_arb(xarb, infix);
         convInfix2Postfix_arb(infix, postfix);
         T = arb_gen(T, postfix);
-        bfs(T, arr);*/
+        bfs(T, arr);
     }
     catch (invalid_argument& e) {
         cout << e.what();

@@ -151,11 +151,15 @@ void MainGame() {
 		if (back.contains(last_mouse_x, last_mouse_y)) {
 			changeWin = 1; break;
 		}
-		if (arbbuton.contains(last_mouse_x, last_mouse_y) && ok_for_arb) {
+		if (arbbuton.contains(last_mouse_x, last_mouse_y)) {
 			int current_window = getcurrentwindow();
-			cout << temp<<'\n';
-			desenArb(temp); // <- aici fac un new window
-			setcurrentwindow(current_window);
+			if(!ok_for_arb) console.log("String must be a valid equation!", colors(secondary));
+			else if (temp == "")
+				console.log("No string to generate tree!", colors(secondary));
+			else {
+				desenArb(temp); // <- aici fac un new window
+				setcurrentwindow(current_window);
+			}
 			last_mouse_x = last_mouse_y = 0;
 		}
 
@@ -179,18 +183,23 @@ void MainGame() {
 		}
 		if (box_var.state == CLICKED) {
 			bool ok;
+			char s[10];
 			do {
 				ok = true;
-				aux = string(to_string(level + 1) + ".");
-				char s[10] = "";
-				strcpy(s, aux.c_str());
-				outtextxy(360, 180 + (level * 40), s);
-				outtextxy(420, 180 + (level * 40), inputbuf[level]);
+				if (level != 17) {
+					aux = string(to_string(level + 1) + ".");
+					s[0] = 0;
+					strcpy(s, aux.c_str());
+					outtextxy(360, 180 + (level * 40), s);
+					outtextxy(420, 180 + (level * 40), inputbuf[level]);
+				}
 				if (kbhit()) c = getch(); ///daca apas o tasta, mi- inregistreaza in variabila C
 				else break;
+				//console.log(to_string(input_pos));
 				if (input_pos > 19) {
 					input_pos = 19;
 					console.log("Error: Maximum number of characters reached!", colors(secondary));
+					setcolor(WHITE);
 					outtextxy(420, 180 + level * 40, inputbuf[level]);
 				}
 				switch (c) {
@@ -212,48 +221,51 @@ void MainGame() {
 
 						///Scriu nivelul levelui cu back_color ca sa il sterg
 						aux = string(to_string(level + 1) + ".");
-						char s[10] = "";
+						s[0] = 0;
 						strcpy(s, aux.c_str());
 						setcolor(back_color);
 						outtextxy(360, 180 + (level * 40), s);
 
 						setcolor(WHITE);
-						if (level != 17) {
-							level--;
-							//Scriu nivelul curent
-							aux = string(to_string(level + 1) + ".");
-							char s[10] = "";
-							strcpy(s, aux.c_str());
+						level--;
+						//Scriu nivelul curent
+						aux = string(to_string(level + 1) + ".");
+						s[0] = 0;
+						strcpy(s, aux.c_str());
 
-							setcolor(back_color);
-							//Sterg variabila din memorie
-							delete_var(inputbuf[level]);
-							
-
-							///Sterg poza "X" sau "Check" din stanga variabilei
-							setfillstyle(SOLID_FILL, back_color);
-							bar(300, 180 + (level * 40), 340, 180 + (level * 40) + 40);
-
-							outtextxy(360, 180 + (level * 40), s);
-							outtextxy(420, 180 + (level * 40), inputbuf[level]);
+						setcolor(back_color);
+						//Sterg variabila din memorie
+						delete_var(inputbuf[level]);
 
 
-							///Sterg sirul de pe nivelul curent
-							for (int j = 19; j > -1; j--)
-								inputbuf[level][j] = 0;
-							inputbuf[level][input_pos] = 0;
-							input_pos = 0;
-						}
+						///Sterg poza "X" sau "Check" din stanga variabilei
+						setfillstyle(SOLID_FILL, back_color);
+						bar(300, 180 + (level * 40), 340, 180 + (level * 40) + 40);
+
+						outtextxy(360, 180 + (level * 40), s);
+						outtextxy(420, 180 + (level * 40), inputbuf[level]);
+
+
+						///Sterg sirul de pe nivelul curent
+						for (int j = 19; j > -1; j--)
+							inputbuf[level][j] = 0;
+						inputbuf[level][input_pos] = 0;
+						input_pos = 0;
 					}
 					else if (input_pos < 0) input_pos = 0;
 
 					break;
 				case 13: //return
+					console.clear();
+					if (level >= 17) {
+						console.log("Error: Maximum number of variables reached!", colors(secondary));
+						level = 17;  break;
+					}
 					try {
 						ok_variable = check_variable(inputbuf[level]);
 					}
 					catch (invalid_argument& e) {
-
+						
 						///Sterg poza "X" sau "Check" din stanga variabilei
 						setfillstyle(SOLID_FILL, back_color);
 						bar(300, 180 + (level * 40), 340, 180 + (level * 40) + 40);
@@ -281,11 +293,8 @@ void MainGame() {
 						readimagefile("./Resources/Images/check.gif", 300, 180 + (level * 40), 340, 180 + (level * 40) + 40);
 						setcolor(back_color);
 
-						if (level >= 16) { level = 16; }
-						else {
-							input_pos = 0;
-							level++;
-						}
+						input_pos = 0;
+						level++;
 					}
 					break;
 
@@ -295,7 +304,8 @@ void MainGame() {
 					last_mouse_y = box_ecuatie.y + 10;
 					break;
 				default:
-					if (input_pos < 10000 && c >= ' ' && c <= '~') {
+					if (input_pos < 10000 && c >= ' ' && c <= '~' && level < 17) {
+						console.clear();
 						inputbuf[level][input_pos++] = c;
 						inputbuf[level][input_pos] = 0;
 					}
@@ -394,6 +404,7 @@ void MainGame() {
 
 				default:
 					if (expresie_pos < 10000 && c >= ' ' && c <= '~') {
+						console.clear();
 						expresie[levelec][expresie_pos++] = c;
 						expresie[levelec][expresie_pos] = 0;
 					}
@@ -412,7 +423,7 @@ void MainGame() {
 }
 
 void desenArb(string x) {
-	int window = initwindow(screen_width, screen_height, "Arbore");
+	int window = initwindow(screen_width, screen_height, "", 0, 0, 0, 0);
 	cleardevice();
 	arb T = initArb(x);
 	nivels(T, 1);

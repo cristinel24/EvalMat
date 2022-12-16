@@ -143,27 +143,36 @@ void parse(string& x) {
         if (x[i] == '(') paranteze++;
         else if (x[i] == ')') paranteze--;
     if(paranteze) throw invalid_argument("Incorect parenthesis!");
+    for (i = 0; i < x.size()-1; i++)
+        if(x[i]!='(' && esteOperator(string(1, x[i])) && x[i + 1] == '-')
+            throw invalid_argument("Negative number must be between brackets!");
     spaces(x);
     trigo(x);
     checkNegative(x);
 }
 void variables(string& x) {
     map<string, double>::reverse_iterator i;
+    int state;
     for (i = variabile_map.rbegin(); i != variabile_map.rend(); i++) { ///Ma plimb prin map de la coada la cap
-        int state = x.find(i->first); 
+        state = x.find(i->first); 
         while (state != string::npos) {
-            if (state != -1) x.replace(state, (i->first).size(), "(" + to_string(i->second) + ")");
+            if (state != -1) {
+                if(state == 0 && x.size() == i->first.size() || state == 0 && esteOperator(string(1, x[state + (i->first).size()])) || (state + (i->first).size() == x.size()) || state > 0 && esteOperator(string(1, x[state - 1])) && esteOperator(string(1, x[state + (i->first).size() ])))
+                x.replace(state, (i->first).size(), "(" + to_string(i->second) + ")");
+            }
             state = x.find(i->first, state + 1);
         }
     }
     int pifind = x.find("pi");
     while (pifind != string::npos) {
-        x.replace(x.find("pi"), 2, "(" + to_string(3.14159265359) + ")");
+        if (pifind == 0 && x.size() == 2 || pifind == 0 && esteOperator(string(1, x[pifind + 2])) || (pifind + 2 == x.size()) || pifind > 0 && esteOperator(string(1, x[pifind - 1])) && esteOperator(string(1, x[pifind + 2])))
+            x.replace(x.find("pi"), 2, "(" + to_string(3.14159265359) + ")");
         pifind = x.find("pi", pifind + 1);
     }
     int efind = x.find("e");
     while (efind != string::npos) {
-        x.replace(x.find("e"), 1, "(" + to_string(2.71828182846) + ")");
+        if (efind == 0 && x.size() == 1 || efind == 0 && esteOperator(string(1, x[pifind + 1])) || (efind + 1 == x.size()) || efind > 0 && esteOperator(string(1, x[efind - 1])) && esteOperator(string(1, x[efind + 1])))
+            x.replace(x.find("e"), 1, "(" + to_string(2.71828182846) + ")");
         efind = x.find("e", efind + 1);
     }
    

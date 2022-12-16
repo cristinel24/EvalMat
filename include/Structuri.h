@@ -36,6 +36,9 @@ struct coada {
 	void push(string x) {
 		c[++ultim] = x;
 	}
+	int size() {
+		return ultim + 1;
+	}
 };
 
 struct node {

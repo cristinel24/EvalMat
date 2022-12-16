@@ -151,9 +151,10 @@ void draw(string s, int niv, int col, int n_size, int c_size) {
 	int xc = col * c_size - c_size / 2, yc = niv * n_size - n_size / 2;
 	setcolor(COLOR(54, 114, 174));
 	setlinestyle(0, SOLID_LINE, 2);
-	ellipse(xc, yc, 0, 360, 40, 20);
+	int lg = s.size() * 5;
+	ellipse(xc, yc, 0, 360, lg + 10, 20);
 	setbkcolor(COLOR(40, 41, 43)); setcolor(COLOR(236, 160, 64));
-	outtextxy(xc  - 5, yc - 5, _strdup(s.c_str()));
+	outtextxy(xc - 3*lg/4 , yc - 5, _strdup(s.c_str()));
 
 	setcolor(COLOR(236, 160, 64));
 }

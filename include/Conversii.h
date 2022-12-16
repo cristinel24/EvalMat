@@ -115,7 +115,7 @@ double valpostfix(coada& infix) {
 			S.push(val_s); //pun string in stiva
 		}
 	}
-	x = S.top(); S.pop();
+	if(!S.empty()) x = S.top(); S.pop();
 	if(S.top()!="") throw invalid_argument("Invalid operator!");
 	val = stod(x);
 	if (val == -0) val = 0;
