@@ -299,7 +299,7 @@ void putimage( int left, int top, void *bitmap, int op );
 void printimage(
     const char* title=NULL,	
     double width_inches=7, double border_left_inches=0.75, double border_top_inches=0.75,
-    int left=0, int right=0, int top=INT_MAX, int bottom=INT_MAX,
+    int left=0, int top=0, int right=INT_MAX, int bottom=INT_MAX,
     bool active=true, HWND hwnd=NULL
     );
 void readimagefile(
@@ -354,8 +354,9 @@ void setrgbpalette( int colornum, int red, int green, int blue );
 int COLOR(int r, int g, int b); // No longer a macro
 
 #ifdef __cplusplus
-};
+}
 #endif
 // ---------------------------------------------------------------------------
 
 #endif // WINBGI_H
+
