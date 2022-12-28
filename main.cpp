@@ -4,6 +4,7 @@
 #include <commdlg.h>
 
 #define NMAX 1024
+
 using namespace std;
 
 ifstream fin("eval.in");

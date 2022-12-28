@@ -11,7 +11,7 @@ void draw(string, int, int, int, int);
 
 int get_max_level(arb);
 int get_max_column(arb);
-int offset = 30;
+int offset = 10;
 
 bool check_variable(char* s) {
 	///Copiez in sirul 'variabila' variabila
@@ -38,7 +38,7 @@ bool check_variable(char* s) {
 	int i = 0;
 	///Verific daca variabila este corect sintactic (primul caracter e o litera, urmatoarele sunt alfanumerice sau '_'
 	for (i = 0; i < strlen(variabila); i++) {
-		if (i == 0 && !isalpha(variabila[0])) throw invalid_argument("Invalid variable name!");
+		if (i == 0 && !isalpha(variabila[0]) && variabila[0] != '_') throw invalid_argument("Invalid variable name!");
 		else if (!(isalnum(variabila[i]) || variabila[i] == '_')) {
 			string err = "Invalid variable name! Character: '" + string(1, variabila[i]) + "' forbidden!";
 			throw invalid_argument(err);
@@ -46,9 +46,9 @@ bool check_variable(char* s) {
 	}
 	coada infix; string val_s = valoare, var_s = variabila;
 
-	string reserved_words[] = { "e", "pi", "sin","cos","tg","round","sqrt","lg" ,"log2" ,"ln" , "abs" };
+	string reserved_words[] = { "e", "pi", "sin","cos","tg","round","sqrt","lg" ,"log2" ,"ln" , "abs", "cbrt"};
 
-	for (int i = 0; i < 11; i++)
+	for (int i = 0; i < 12; i++)
 		if (reserved_words[i] == var_s) throw invalid_argument(string("'" + var_s + "' is a reserved word!"));
 	
 	
@@ -116,12 +116,7 @@ void columns(arb a, int n_size, int c_size, int& contor) {
 	setcolor(COLOR(236, 160, 64));
 	if (a != NULL) {
 		columns(a->st, n_size, c_size, contor);
-
 		draw(a->val, a->niv, ++contor, n_size, c_size);
-		/*for (int i = 0; i < 9; i++)
-			if (a->val == one[i]) {
-				--contor; break;
-			}*/
 		a->col = contor;
 		columns(a->dr, n_size, c_size, contor);
 	}
@@ -131,16 +126,8 @@ void linii(arb a, int n_size, int c_size) {
 	setcolor(COLOR(236, 160, 64));
 	
 	if (a != NULL) {
-		if (a->st) line(a->col * c_size - c_size / 2 - offset, a->niv * n_size - n_size / 2 + offset, a->st->col * c_size - c_size / 2 + offset, a->st->niv * n_size - n_size / 2 - offset);
-		int was_special = 0;
-		/*for (int i = 0; i < 9; i++)
-			if (a->val == one[i]) {
-				line(a->col * c_size - c_size / 2, a->niv * n_size - n_size / 2 + offset, a->col * c_size - c_size / 2, a->dr->niv * n_size - n_size / 2 - offset);
-				was_special = 1; break;
-			}*/	
-
-		if (!was_special)
-			if (a->dr) line(a->col * c_size - c_size / 2 + offset, a->niv * n_size - n_size / 2 + offset, a->dr->col * c_size - c_size / 2 - offset, a->dr->niv * n_size - n_size / 2 - offset);
+		if (a->st) line(a->col * c_size - c_size / 2, a->niv * n_size - n_size / 2 + offset, a->st->col * c_size - c_size / 2, a->st->niv * n_size - n_size / 2 - offset);
+		if (a->dr) line(a->col * c_size - c_size / 2, a->niv * n_size - n_size / 2 + offset, a->dr->col * c_size - c_size / 2, a->dr->niv * n_size - n_size / 2 - offset);
 
 		linii(a->st, n_size, c_size);
 		linii(a->dr, n_size, c_size);
@@ -152,9 +139,9 @@ void draw(string s, int niv, int col, int n_size, int c_size) {
 	setcolor(COLOR(54, 114, 174));
 	setlinestyle(0, SOLID_LINE, 2);
 	int lg = s.size() * 5;
-	ellipse(xc, yc, 0, 360, lg + 10, 20);
+	ellipse(xc, yc, 0, 360, lg + 10, 10);
 	setbkcolor(COLOR(40, 41, 43)); setcolor(COLOR(236, 160, 64));
-	outtextxy(xc - 3*lg/4 , yc - 5, _strdup(s.c_str()));
+	outtextxy(xc - 3*lg/4 , yc - 7, _strdup(s.c_str()));
 
 	setcolor(COLOR(236, 160, 64));
 }

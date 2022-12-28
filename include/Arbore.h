@@ -7,7 +7,7 @@ void init_coada_arb(string, coada&);
 void convInfix2Postfix_arb(coada&, coada&);
 
 arb arb_gen(arb tree, coada postfix) {
-	string oper[] = { "sin","cos" ,"tg" ,"sqrt" ,"round" ,"ln" ,"log2" ,"lg" ,"abs" };
+	string oper[] = { "sin","cos" ,"tg" ,"sqrt" ,"round" ,"ln" ,"log2" ,"lg" ,"abs", "cbrt"};
 	stiva_arb st; string x;
 	node* temp1 = nullptr, *temp2= nullptr;
 	while (!postfix.empty()) {
@@ -20,7 +20,7 @@ arb arb_gen(arb tree, coada postfix) {
 			temp1 = st.top(); st.pop();
 			
 			bool ok = 1;
-			for (int i = 0; i < 9; i++)
+			for (int i = 0; i < 10; i++)
 				if (x == oper[i]) { ok = 0; break; }
 			if (ok) { 
 				temp2 = st.top(); st.pop();
@@ -53,8 +53,8 @@ void bfs(arb r, string s[]) {
 	}
 }
 bool esteOperator_arb(string x) { ///returneaza 1 daca se gaseste in lista de operanzi, 0 altfel
-	string operatori[] = { "", "+","-","/","*","(",")","%","&","|","^","<",">","=","xor", ">=", "<=", "!=","sin","cos" ,"tg" ,"sqrt" ,"round" ,"ln" ,"log2" ,"lg" ,"abs"};
-	for (int i = 1; i < 26; i++)
+	string operatori[] = { "", "+","-","/","*","(",")","%","&","|","^","<",">","=","xor", ">=", "<=", "!=","sin","cos" ,"tg" ,"sqrt" ,"round" ,"ln" ,"log2" ,"lg" ,"abs", "cbrt" };
+	for (int i = 1; i < 28; i++)
 		if (operatori[i] == x) return 1;
 	return 0;
 }
@@ -65,7 +65,7 @@ void init_coada_arb(string x, coada& infix) {
 			infix.push(string(1, x[i]));
 		else {
 			string aux2 = "", variabila = ""; bool isvar = 0; int j;
-			for (j = i; isalpha(x[j]) || x[j] == '_' || (x[j]== '2' && j>0 && x[j-1]=='g'); j++) {
+			for (j = i; isalnum(x[j]) || x[j] == '_' || (x[j]== '2' && j>0 && x[j-1]=='g'); j++) {
 				variabila += x[j];
 				isvar = 1;
 			}
@@ -100,7 +100,7 @@ void init_coada_arb(string x, coada& infix) {
 		}
 	}
 	for (int i = 0; i < infix.size(); i++) {
-		if (infix.c[i] == "-" && i == 0 || infix.c[i] == "-" && esteOperator(infix.c[i - 1])) {
+		if (infix.c[i] == "-" && i == 0 || infix.c[i] == "-" && esteOperator(infix.c[i - 1]) && infix.c[i - 1] != ")") {
 			infix.c[i] = to_string(0 - stod(infix.c[i + 1]));
 			for (int j = i + 1; j < infix.size(); j++)
 				infix.c[j] = infix.c[j + 1];

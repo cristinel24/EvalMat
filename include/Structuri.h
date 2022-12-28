@@ -76,14 +76,11 @@ void init() {
 	priot.insert({ "=", 1 });
 	priot.insert({ "|", 1 });
 	priot.insert({ "&", 1 });
-	priot.insert({ "xor", 1 });
 	priot.insert({ "<", 1 });
 	priot.insert({ "<=", 1 });
 	priot.insert({ ">", 1 });
 	priot.insert({ ">=", 1 });
 	priot.insert({ "!=", 1 });
-
-	
 
 	priot.insert({ "+", 2 });
 	priot.insert({ "-", 2 });
@@ -103,6 +100,8 @@ void init() {
 	priot.insert({ "round", 5 });
 	priot.insert({ "lg", 5 });
 	priot.insert({ "abs", 5 });
+	priot.insert({ "xor", 5 });
+
 
 	priot.insert({ "(", 100 });
 	priot.insert({ ")", 100 });

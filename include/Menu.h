@@ -3,13 +3,19 @@
 #define back_color COLOR(40, 41, 43) //culoare backgroundului
 #define primary COLOR(54, 114, 174) //bleu
 #define secondary COLOR(236, 160, 64) //orange
+
+int last_mouse_x, last_mouse_y, mouse_x, mouse_y, hover_x, hover_y, release_x, release_y, last_hover_x, last_hover_y;
 void Menu();
 void MainGame();
 void desenArb(string);
+void info_s();
+string openDialog();
+void reset(char**&, int&, int&, char*);
 
 void Menu() {
 	cleardevice();
 	readimagefile("./Resources/Images/background_logo.jpg", 0, 0, screen_width, screen_height);
+
 	MainLoop = true;
 
 	Buton start, exit_b;
@@ -17,12 +23,18 @@ void Menu() {
 	exit_b.createButton(midx-120, midy+200, 300, 75, "EXIT", colors(COLOR(236, 160, 64)), colors(COLOR(30, 63, 97)), midx-35, midy+217, 5);
 	
 	int offset = 2; ///cati pixeli merg in spate
-
+	clearmouseclick(WM_LBUTTONDOWN);
+	clearmouseclick(WM_MOUSEMOVE);
 	while (MainLoop) {
-		getmouseclick(WM_LBUTTONUP, release_x, release_y);
+		try {
+			getmouseclick(WM_LBUTTONUP, release_x, release_y);
+			getmouseclick(WM_MOUSEMOVE, hover_x, hover_y);
+		}
+		catch (invalid_argument& e) {
+			getmouseclick(WM_LBUTTONUP, release_x, release_y);
+			getmouseclick(WM_MOUSEMOVE, hover_x, hover_y);
+		}
 
-		///Hover
-		getmouseclick(WM_MOUSEMOVE, hover_x, hover_y);
 		if (hover_x != -1 && hover_y != -1 && (hover_x != last_hover_x || hover_y != last_hover_y)) {
 			last_hover_x = hover_x;
 			last_hover_y = hover_y;
@@ -70,6 +82,7 @@ void Menu() {
 }
 
 void MainGame() {
+	int last_mouse_x = 0, last_mouse_y = 0, mouse_x = 0, mouse_y = 0, hover_x = 0, hover_y = 0, release_x = 0, release_y = 0, last_hover_x = 0, last_hover_y = 0;
 
 	cleardevice();
 	readimagefile("./Resources/Images/main.jpg", 0, 0, screen_width, screen_height);
@@ -77,12 +90,15 @@ void MainGame() {
 	int offset = 2; 
 
 	InputBox box_var, box_ecuatie;
-	Buton back, arbbuton; 
+	Buton back, arbbuton, info, loadFromFile, trash; 
 	back.createButton(100, 50, 150, 60, "BACK", colors(back_color), colors(secondary), 115, 65, 4);
 	box_var.createBox(350, 170, 500, 700);
 	box_ecuatie.createBox(900, 170, 700, 300);
 	console.createConsole(900, 540, 700, 330); ///Console e in structuri.h (e globala)
 	arbbuton.createButton(1400, 480, 190, 50, "TREE", colors(back_color), colors(secondary), 1435, 490, 4);
+	info.createButton_Image(1480, 126, 16, 30, "./Resources/Images/info.gif");
+	loadFromFile.createButton_Image(1515, 130, 30, 0.85*30, "./Resources/Images/load.gif");
+	trash.createButton_Image(1560, 130, 25, 25, "./Resources/Images/trash.gif");
 
 	setcolor(secondary); setbkcolor(back_color);
 
@@ -93,19 +109,29 @@ void MainGame() {
 	text = _strdup("Console:");
 	outtextxy(910, 500, text);
 
-	char** inputbuf = new char* [20], **expresie = new char* [20], temp[NMAX], c;
-	int input_pos = 0, expresie_pos = 0, level = 0, levelec=0;
+	char** inputbuf = new char* [20], ** expresie = new char* [100000], *temp= new char [100000* 33], c;
+	int input_pos = 0, expresie_pos = 0, level = 0, levelec = 0;
 	string aux, expr_s; coada infix;
 	double val_expression;
-	bool ok_variable, ok_expression = 1, was_ecuation = 0, changeWin = 0, ok_for_arb = 0;
+	bool ok_variable, ok_expression = 1, was_ecuation = 0, changeWin = 0, ok_for_arb = 0, loaded_from_file = false;
 
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 20; i++) 
 		inputbuf[i] = new char[50]{};
+	for (int i = 0; i < 1024; i++) 
 		expresie[i] = new char[50]{};
-	}
-
+	
+	clearmouseclick(WM_LBUTTONDOWN);
+	clearmouseclick(WM_MOUSEMOVE);
 	while (MainLoop) {
-		getmouseclick(WM_LBUTTONDOWN, mouse_x, mouse_y);
+		try {
+			getmouseclick(WM_LBUTTONDOWN, mouse_x, mouse_y);
+			//Hover
+			getmouseclick(WM_MOUSEMOVE, hover_x, hover_y);
+		}
+		catch (invalid_argument& e) {
+			getmouseclick(WM_LBUTTONUP, release_x, release_y);
+			getmouseclick(WM_MOUSEMOVE, hover_x, hover_y);
+		};
 		///functia getmouseclick se activeaza doar in milisecunda cand apas click, 
 		//iar in rest returneaza valoarea -1
 
@@ -115,8 +141,6 @@ void MainGame() {
 		}
 		///Cand apas click sa fie click uit mereu (last_mouse_x && (last_mouse_y)
 		
-		///Hover
-		getmouseclick(WM_MOUSEMOVE, hover_x, hover_y);
 		if (hover_x != -1 && hover_y != -1 && (hover_x != last_hover_x || hover_y != last_hover_y)) {
 			last_hover_x = hover_x;
 			last_hover_y = hover_y;
@@ -147,24 +171,132 @@ void MainGame() {
 			rectangle(arbbuton.x - offset, arbbuton.y - offset, arbbuton.x + arbbuton.size_x + offset, arbbuton.y + arbbuton.size_y + offset);
 			setlinestyle(0, SOLID_LINE, 1);
 		}
+		///Info Hover
+		if (info.contains(last_hover_x, last_hover_y)) {
+			setlinestyle(0, SOLID_LINE, 3);
+			setcolor(primary);
+			circle(info.x + info.size_x / 2, info.y + info.size_y / 2, sqrt(pow(info.size_y + 5, 2) + pow(info.size_x + 5, 2)) / 2);
+			setlinestyle(0, SOLID_LINE, 1);
+		}
+		else {
+			setlinestyle(0, SOLID_LINE, 6);
+			setcolor(back_color);
+			circle(info.x + info.size_x / 2, info.y + info.size_y / 2, sqrt(pow(info.size_y + 5, 2) + pow(info.size_x + 5, 2)) / 2);
+			setlinestyle(0, SOLID_LINE, 1);
+		}
+		///LoadFormFile Hover
+		if (loadFromFile.contains(last_hover_x, last_hover_y)) {
+			setlinestyle(0, SOLID_LINE, 3);
+			setcolor(primary);
+			rectangle(loadFromFile.x - 5, loadFromFile.y - 5, loadFromFile.x + loadFromFile.size_x + 5, loadFromFile.y + loadFromFile.size_y + 5);
+			setlinestyle(0, SOLID_LINE, 1);
+		}
+		else {
+			setlinestyle(0, SOLID_LINE, 3);
+			setcolor(back_color);
+			rectangle(loadFromFile.x - 5, loadFromFile.y - 5, loadFromFile.x + loadFromFile.size_x + 5, loadFromFile.y + loadFromFile.size_y + 5);
+			setlinestyle(0, SOLID_LINE, 1);
+		}
+		///Trash Hover
+		if (trash.contains(last_hover_x, last_hover_y)) {
+			setlinestyle(0, SOLID_LINE, 3);
+			setcolor(primary);
+			rectangle(trash.x - 5, trash.y - 5, trash.x + trash.size_x + 5, trash.y + trash.size_y + 5);
+			setlinestyle(0, SOLID_LINE, 1);
+		}
+		else {
+			setlinestyle(0, SOLID_LINE, 3);
+			setcolor(back_color);
+			rectangle(trash.x - 5, trash.y - 5, trash.x + trash.size_x + 5, trash.y + trash.size_y + 5);
+			setlinestyle(0, SOLID_LINE, 1);
+		}
 
 		if (back.contains(last_mouse_x, last_mouse_y)) {
-			changeWin = 1; break;
+			last_mouse_x = last_mouse_y = 0;
+			delete_variables();
+			delete []inputbuf;
+			delete []expresie;
+			delete temp;
+			return;
 		}
 		if (arbbuton.contains(last_mouse_x, last_mouse_y)) {
 			int current_window = getcurrentwindow();
-			if(!ok_for_arb) console.log("String must be a valid equation!", colors(secondary));
-			else if (temp == "")
+			if (temp == "")
 				console.log("No string to generate tree!", colors(secondary));
+			else if (!ok_for_arb) 
+				console.log("String must be a valid equation!", colors(secondary));
 			else {
-				desenArb(temp); // <- aici fac un new window
+				try {
+					desenArb(temp); // <- aici fac un new window
+				}
+				catch (invalid_argument& e) {
+					setcurrentwindow(current_window);
+					console.log(e.what(), colors(secondary));
+				}
 				setcurrentwindow(current_window);
 			}
 			last_mouse_x = last_mouse_y = 0;
 		}
-
-		/// <summary>
-		/// InputBox ul de variabile
+		if (info.contains(last_mouse_x, last_mouse_y)) {
+			int current_window = getcurrentwindow();
+			info_s(); 
+			setcurrentwindow(current_window);
+			console.clear();
+			last_mouse_x = last_mouse_y = 0;
+		}
+		if (loadFromFile.contains(last_mouse_x, last_mouse_y)) {
+			string response;
+			char c;
+			bool overflow = false;
+			char buf[256];
+			GetCurrentDirectory(256, buf);
+			response = openDialog();
+			SetCurrentDirectory(buf);
+			if (!response.empty()) {
+				console.clear();
+				reset(expresie, levelec, expresie_pos, temp);
+				ifstream fin(response);
+				int level = 0, pos = 0;
+				levelec = expresie_pos = 0;
+				ok_for_arb = false;
+				while (fin.get(c)) {
+					if (c >= ' ' && c <= '~') {
+						expresie[level][pos++] = c;
+						expresie[level][pos] = 0;
+						expresie_pos++;
+					}
+					if (pos > 33) {
+						levelec++;
+						level++;
+						expresie_pos = 0;
+						pos = 0;
+					}
+				}
+				if (levelec >= 5) {
+					setcolor(WHITE);
+					outtextxy(910, 180 + 0, _strdup("Press 'Enter' to evaluate"));
+					outtextxy(910, 180 + 40, _strdup("Press the 'Trash' icon to delete"));
+					if (response.size() > 190) {
+						response = response.substr(0, 190);
+						response += "...";
+					}
+					console.log("Too much text for this window! Content from " + response + " saved in background!", colors(secondary));
+					overflow = true;
+				}
+				loaded_from_file = true;
+				setcolor(WHITE);
+				for(int i=0; i<levelec && !overflow; i++)
+					outtextxy(910, 180 + (i * 40), expresie[i]);
+			}
+			last_mouse_x = box_ecuatie.x + 10;
+			last_mouse_y = box_ecuatie.y + 10;
+		}
+		if (trash.contains(last_mouse_x, last_mouse_y)) {
+			reset(expresie, levelec, expresie_pos, temp);
+			loaded_from_file = 0;
+		}
+	
+		/// InputBox ul de variabile	
 		if (box_var.contains(last_mouse_x, last_mouse_y)) {
 			box_var.state = CLICKED;
 			setcolor(primary);
@@ -312,9 +444,7 @@ void MainGame() {
 				}
 			} while (ok && box_var.state == CLICKED);
 		}
-		/// </summary>
-
-		/// <summary>
+	
 		/// InputBox ul de Expresie
 		if (box_ecuatie.contains(last_mouse_x, last_mouse_y)) {
 			box_ecuatie.state = CLICKED;
@@ -336,89 +466,87 @@ void MainGame() {
 			bool ok;
 			do {
 				ok = true;
+				setcolor(WHITE);
 				///Scriu expresia
-				outtextxy(910, 180 + (levelec * 40), expresie[levelec]);
+				if(!loaded_from_file) outtextxy(910, 180 + (levelec * 40), expresie[levelec]);
+				
 				if (kbhit()) c = getch();
 				else break;
 				
+
 				if (expresie_pos > 33 && levelec < 6) {
 					levelec++;
 					expresie_pos = 0;
 				}
 				else if (expresie_pos > 33 && levelec == 6) expresie_pos = 33;
 					
-				switch (c) {
-				case 8: //backspace
-					console.clear();
-					if (expresie_pos > 0) {
+				if(!loaded_from_file || loaded_from_file && c == 13)
+					switch (c) {
+					case 8: //backspace
+						console.clear();
+						if (expresie_pos > 0) {
 
-						///Sterg ultimul caracter
-						setcolor(back_color);
+							///Sterg ultimul caracter
+							setcolor(back_color);
+							outtextxy(910, 180 + levelec * 40, expresie[levelec]);
+							expresie[levelec][--expresie_pos] = 0;
+						}
+						///Scriul noul sir
+						setcolor(WHITE);
 						outtextxy(910, 180 + levelec * 40, expresie[levelec]);
-						expresie[levelec][--expresie_pos] = 0;
-					}
-					///Scriul noul sir
-					setcolor(WHITE);
-					outtextxy(910, 180 + levelec * 40, expresie[levelec]);
 
-					if (expresie_pos < 0) expresie_pos = 0;
-					else if (expresie_pos == 0 && levelec > 0) {
-						levelec--;
-						int i = 0;
-						expresie_pos = 33;
-					}
+						if (expresie_pos < 0) expresie_pos = 0;
+						else if (expresie_pos == 0 && levelec > 0) {
+							levelec--;
+							int i = 0;
+							expresie_pos = 33;
+						}
 					
 
-					break;
-				case 13: //return
-					try {
-						strcpy(temp, "");
-						for(int j=0; j<levelec + 1; j++)
-							strcat(temp, expresie[j]);
-						if (strlen(temp) == 0) throw invalid_argument("No string to evaluate!");
-						while (!infix.empty()) infix.pop();
-						expr_s = temp;
-						variables(expr_s); ///inlocuiesc fiecare variabila
-						parse(expr_s);
-						init_coada(expr_s, infix);
-						val_expression = valpostfix(infix);
-						ok_expression = 1;
-					}
-					catch (invalid_argument& e) {
-						string err = "Error: " + string(e.what());
-						console.log(err, colors(COLOR(236, 160, 64)));
-						ok_expression = 0;
-						ok_for_arb = 0;
-					}
-					if (ok_expression) {
-						console.log(to_string(val_expression));
-						ok_for_arb = 1;
-					}
-					break;
+						break;
+					case 13: //return
+						try {
+							strcpy(temp, "");
+							for(int j=0; j<levelec + 1; j++)
+								strcat(temp, expresie[j]);
+							if (strlen(temp) == 0) throw invalid_argument("No string to evaluate!");
+							while (!infix.empty()) infix.pop();
+							expr_s = temp;
+							variables(expr_s); ///inlocuiesc fiecare variabila
+							parse(expr_s);
+							init_coada(expr_s, infix);
+							val_expression = valpostfix(infix);
+							ok_expression = 1;
+						}
+						catch (invalid_argument& e) {
+							cout << temp << '\n';
+							string err = "Error: " + string(e.what());
+							console.log(err, colors(COLOR(236, 160, 64)));
+							ok_expression = 0;
+							ok_for_arb = 0;
+						}
+						if (ok_expression) {
+							console.log(to_string(val_expression));
+							ok_for_arb = 1;
+						}
+						break;
 
-				case 9: ///Tab
-					box_ecuatie.state = INACTIVE;
-					last_mouse_x = box_var.x + 10;
-					last_mouse_y = box_var.y + 10;
-					break;
+					case 9: ///Tab
+						box_ecuatie.state = INACTIVE;
+						last_mouse_x = box_var.x + 10;
+						last_mouse_y = box_var.y + 10;
+						break;
 
-				default:
-					if (expresie_pos < 10000 && c >= ' ' && c <= '~') {
-						console.clear();
-						expresie[levelec][expresie_pos++] = c;
-						expresie[levelec][expresie_pos] = 0;
+					default:
+						if (expresie_pos < 10000 && c >= ' ' && c <= '~') {
+							console.clear();
+							expresie[levelec][expresie_pos++] = c;
+							expresie[levelec][expresie_pos] = 0;
+						}
 					}
-				}
 			} while (ok && box_ecuatie.state == CLICKED);
 		}
-		/// </summary>
-	}
-	if (changeWin) {
-		last_mouse_x = last_mouse_y = 0;
-		delete_variables();
-		delete []inputbuf;
-		delete []expresie;
-		return;
+		
 	}
 }
 
@@ -427,14 +555,84 @@ void desenArb(string x) {
 	cleardevice();
 	arb T = initArb(x);
 	nivels(T, 1);
+	int max_column = get_max_column(T);
+	int max_level = get_max_level(T);
+
+	if (max_column > 230) {
+		closegraph(window);
+		throw invalid_argument("Error: Expression too long! Consider moving sub-expressions to variables!");
+	}
+		
+	
 	int contor = 0;
 	setfillstyle(SOLID_FILL, back_color);
 	bar(0, 0, screen_width, screen_height);
 
-	columns(T, screen_height / get_max_level(T), screen_width / get_max_column(T), contor);
-	linii(T, screen_height / get_max_level(T), screen_width / get_max_column(T));
+	columns(T, screen_height / max_level, screen_width / max_column, contor);
+	linii(T, screen_height / max_level, screen_width / max_column);
 	getch();
 	//delete T;
 	closegraph(window);
 	return;
+}
+
+void reset(char**& expresie, int& level, int& pos, char* temp) {
+	console.clear();
+	setcolor(back_color);
+	for (int i = 0; i <= level; i++) {
+		if(i <= 6) outtextxy(910, 180 + (i * 40), expresie[i]);
+		expresie[i][0] = 0;
+	}
+	level = pos = 0;
+	strcpy(temp, "");
+}
+
+string openDialog() {
+	OPENFILENAME ofn;
+	char szFile[102400]{};
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.lpstrFile = szFile;
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = "Text Files\0*.txt\0";
+	ofn.nFilterIndex = 1;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+	GetOpenFileName(&ofn);
+	string filename= ofn.lpstrFile;
+	
+	return filename;
+
+}
+
+void info_s() {
+	console.log("Close current dialog before using this window!", colors(secondary));
+	int info_window = initwindow(screen_width / 2, screen_height / 2, "", 500, 250, 0, 0);
+	setcurrentwindow(info_window);
+	setbkcolor(back_color);
+	cleardevice();
+	setcolor(secondary);
+	settextstyle(8, HORIZ_DIR, 3);
+
+	setcolor(primary);
+	outtextxy(screen_width / 4 - 73, 40, _strdup("Operators:"));
+	setcolor(secondary);
+	outtextxy(150, 80, _strdup("+, -, /, *, ^, <, >, =, <=, >=, |, &, ()xor(), % "));
+
+	setcolor(primary);
+	outtextxy(screen_width / 4 - 73, 160, _strdup("Functions:"));
+	setcolor(secondary);
+
+	outtextxy(50, 200, _strdup("sin(), cos(), tg(), lg(), log2(), ln(), sqrt(), cbrt()"));
+	outtextxy(screen_width / 4 - 96, 240, _strdup("round(), ln()"));
+	
+	setcolor(primary);
+	outtextxy(screen_width / 4 - 73, 320, _strdup("Constants:"));
+	setcolor(secondary);
+	outtextxy(445, 360, _strdup("pi, e"));
+
+	settextstyle(8, HORIZ_DIR, 2);
+	outtextxy(screen_width / 5 - 72, 500, _strdup("Press any key to continue..."));
+	getch();
+	closegraph(info_window);
 }

@@ -74,8 +74,9 @@ double valpostfix(coada& infix) {
 				val = valst / valdr;
 			}
 			else if (x == "%") {
-				if(valdr == 0) throw invalid_argument("Divided by zero!");
-				val = fmod(valst,valdr);
+				if(int(valst) != valst || int(valdr) != valdr) throw invalid_argument("Can't use '%' on non-int numbers!");
+				if (valdr == 0) throw invalid_argument("Divided by zero!");
+				val = int(valst) % int(valdr);
 			}
 			else if (x == "|") {
 				val = (valst || valdr);
@@ -116,7 +117,7 @@ double valpostfix(coada& infix) {
 		}
 	}
 	if(!S.empty()) x = S.top(); S.pop();
-	if(S.top()!="") throw invalid_argument("Invalid operator!");
+	if(S.top()!="") throw invalid_argument("Invalid operator!"); //daca a mai ramas cv in stiva sigur nu e corect
 	val = stod(x);
 	if (val == -0) val = 0;
 	return val;
