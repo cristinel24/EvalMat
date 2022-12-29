@@ -4,7 +4,8 @@
 #define primary COLOR(54, 114, 174) //bleu
 #define secondary COLOR(236, 160, 64) //orange
 
-int last_mouse_x, last_mouse_y, mouse_x, mouse_y, hover_x, hover_y, release_x, release_y, last_hover_x, last_hover_y;
+
+int mouse_x, mouse_y, hover_x, hover_y;
 void Menu();
 void MainGame();
 void desenArb(string);
@@ -13,6 +14,8 @@ string openDialog();
 void reset(char**&, int&, int&, char*);
 
 void Menu() {
+	int mouse_x = 0, mouse_y = 0, hover_x = 0, hover_y = 0;
+	
 	cleardevice();
 	readimagefile("./Resources/Images/background_logo.jpg", 0, 0, screen_width, screen_height);
 
@@ -23,24 +26,21 @@ void Menu() {
 	exit_b.createButton(midx-120, midy+200, 300, 75, "EXIT", colors(COLOR(236, 160, 64)), colors(COLOR(30, 63, 97)), midx-35, midy+217, 5);
 	
 	int offset = 2; ///cati pixeli merg in spate
-	clearmouseclick(WM_LBUTTONDOWN);
-	clearmouseclick(WM_MOUSEMOVE);
+
 	while (MainLoop) {
+
 		try {
-			getmouseclick(WM_LBUTTONUP, release_x, release_y);
-			getmouseclick(WM_MOUSEMOVE, hover_x, hover_y);
+			if (ismouseclick(WM_LBUTTONUP))
+				getmouseclick(WM_LBUTTONUP, mouse_x, mouse_y);
+			if (ismouseclick(WM_MOUSEMOVE))
+				getmouseclick(WM_MOUSEMOVE, hover_x, hover_y);
 		}
 		catch (invalid_argument& e) {
-			getmouseclick(WM_LBUTTONUP, release_x, release_y);
-			getmouseclick(WM_MOUSEMOVE, hover_x, hover_y);
+			cout << e.what() << '\n';
 		}
 
-		if (hover_x != -1 && hover_y != -1 && (hover_x != last_hover_x || hover_y != last_hover_y)) {
-			last_hover_x = hover_x;
-			last_hover_y = hover_y;
-		}
 		///Start Hover
-		if (start.contains(last_hover_x, last_hover_y)) {
+		if (start.contains(hover_x, hover_y)) {
 			setlinestyle(0, SOLID_LINE, 10);
 			setcolor(primary);
 			rectangle(start.x - offset, start.y - offset, start.x + start.size_x + offset, start.y + start.size_y + offset);
@@ -53,7 +53,7 @@ void Menu() {
 			setlinestyle(0, SOLID_LINE, 1);
 		}
 		///Exit Hover
-		if (exit_b.contains(last_hover_x, last_hover_y)) {
+		if (exit_b.contains(hover_x, hover_y)) {
 			setlinestyle(0, SOLID_LINE, 10);
 			setcolor(primary);
 			rectangle(exit_b.x - offset, exit_b.y - offset, exit_b.x + exit_b.size_x + offset, exit_b.y + exit_b.size_y + offset);
@@ -66,15 +66,16 @@ void Menu() {
 			setlinestyle(0, SOLID_LINE, 1);
 		}
 
-		if (start.contains(release_x, release_y))
+		if (start.contains(mouse_x, mouse_y))
 		{
 			MainGame();
+			mouse_x = mouse_y = 0;
 			cleardevice();
 			readimagefile("./Resources/Images/background_logo.jpg", 0, 0, screen_width, screen_height);
 			start.createButton(midx - 120, midy + 100, 300, 75, "START", colors(COLOR(236, 160, 64)), colors(COLOR(30, 63, 97)), midx - 60, midy + 117, 5);
 			exit_b.createButton(midx - 120, midy + 200, 300, 75, "EXIT", colors(COLOR(236, 160, 64)), colors(COLOR(30, 63, 97)), midx - 35, midy + 217, 5);
 		}
-		if (exit_b.contains(release_x, release_y)) {
+		if (exit_b.contains(mouse_x, mouse_y)) {
 			closegraph();
 			exit(0);
 		}
@@ -82,7 +83,7 @@ void Menu() {
 }
 
 void MainGame() {
-	int last_mouse_x = 0, last_mouse_y = 0, mouse_x = 0, mouse_y = 0, hover_x = 0, hover_y = 0, release_x = 0, release_y = 0, last_hover_x = 0, last_hover_y = 0;
+	int mouse_x = 0, mouse_y = 0, hover_x = 0, hover_y = 0;
 
 	cleardevice();
 	readimagefile("./Resources/Images/main.jpg", 0, 0, screen_width, screen_height);
@@ -113,40 +114,30 @@ void MainGame() {
 	int input_pos = 0, expresie_pos = 0, level = 0, levelec = 0;
 	string aux, expr_s; coada infix;
 	double val_expression;
-	bool ok_variable, ok_expression = 1, was_ecuation = 0, changeWin = 0, ok_for_arb = 0, loaded_from_file = false;
+	bool ok_variable, ok_expression = 1, was_ecuation = 0, changeWin = 0, ok_for_arb = 0, loaded_from_file = false, overflow = false;
 
 	for (int i = 0; i < 20; i++) 
 		inputbuf[i] = new char[50]{};
 	for (int i = 0; i < 1024; i++) 
 		expresie[i] = new char[50]{};
 	
-	clearmouseclick(WM_LBUTTONDOWN);
-	clearmouseclick(WM_MOUSEMOVE);
+	
 	while (MainLoop) {
+
 		try {
-			getmouseclick(WM_LBUTTONDOWN, mouse_x, mouse_y);
+			if (ismouseclick(WM_LBUTTONDOWN))
+				getmouseclick(WM_LBUTTONDOWN, mouse_x, mouse_y);
 			//Hover
-			getmouseclick(WM_MOUSEMOVE, hover_x, hover_y);
+			if (ismouseclick(WM_MOUSEMOVE))
+				getmouseclick(WM_MOUSEMOVE, hover_x, hover_y);
 		}
 		catch (invalid_argument& e) {
-			getmouseclick(WM_LBUTTONUP, release_x, release_y);
-			getmouseclick(WM_MOUSEMOVE, hover_x, hover_y);
-		};
-		///functia getmouseclick se activeaza doar in milisecunda cand apas click, 
-		//iar in rest returneaza valoarea -1
+			cout << e.what() << '\n';
+		}
+			
 
-		if (mouse_x != -1 && mouse_y != -1 && (mouse_x != last_mouse_x || mouse_y != last_mouse_y)) {
-			last_mouse_x = mouse_x;
-			last_mouse_y = mouse_y;
-		}
-		///Cand apas click sa fie click uit mereu (last_mouse_x && (last_mouse_y)
-		
-		if (hover_x != -1 && hover_y != -1 && (hover_x != last_hover_x || hover_y != last_hover_y)) {
-			last_hover_x = hover_x;
-			last_hover_y = hover_y;
-		}
 		///Back Hover
-		if (back.contains(last_hover_x, last_hover_y)) {
+		if (back.contains(hover_x, hover_y)) {
 			setlinestyle(0, SOLID_LINE, 6);
 			setcolor(primary);
 			rectangle(back.x - offset, back.y - offset, back.x + back.size_x + offset, back.y + back.size_y + offset);
@@ -159,7 +150,7 @@ void MainGame() {
 			setlinestyle(0, SOLID_LINE, 1);
 		}
 		///Arbore Hover
-		if (arbbuton.contains(last_hover_x, last_hover_y)) {
+		if (arbbuton.contains(hover_x, hover_y)) {
 			setlinestyle(0, SOLID_LINE, 6);
 			setcolor(primary);
 			rectangle(arbbuton.x - offset, arbbuton.y - offset, arbbuton.x + arbbuton.size_x + offset, arbbuton.y + arbbuton.size_y + offset);
@@ -172,20 +163,20 @@ void MainGame() {
 			setlinestyle(0, SOLID_LINE, 1);
 		}
 		///Info Hover
-		if (info.contains(last_hover_x, last_hover_y)) {
+		if (info.contains(hover_x, hover_y)) {
 			setlinestyle(0, SOLID_LINE, 3);
 			setcolor(primary);
 			circle(info.x + info.size_x / 2, info.y + info.size_y / 2, sqrt(pow(info.size_y + 5, 2) + pow(info.size_x + 5, 2)) / 2);
 			setlinestyle(0, SOLID_LINE, 1);
 		}
 		else {
-			setlinestyle(0, SOLID_LINE, 6);
+			setlinestyle(0, SOLID_LINE, 8);
 			setcolor(back_color);
-			circle(info.x + info.size_x / 2, info.y + info.size_y / 2, sqrt(pow(info.size_y + 5, 2) + pow(info.size_x + 5, 2)) / 2);
+			circle(info.x + info.size_x / 2, info.y + info.size_y / 2, sqrt(pow(info.size_y + 7, 2) + pow(info.size_x + 7, 2)) / 2);
 			setlinestyle(0, SOLID_LINE, 1);
 		}
 		///LoadFormFile Hover
-		if (loadFromFile.contains(last_hover_x, last_hover_y)) {
+		if (loadFromFile.contains(hover_x, hover_y)) {
 			setlinestyle(0, SOLID_LINE, 3);
 			setcolor(primary);
 			rectangle(loadFromFile.x - 5, loadFromFile.y - 5, loadFromFile.x + loadFromFile.size_x + 5, loadFromFile.y + loadFromFile.size_y + 5);
@@ -198,7 +189,7 @@ void MainGame() {
 			setlinestyle(0, SOLID_LINE, 1);
 		}
 		///Trash Hover
-		if (trash.contains(last_hover_x, last_hover_y)) {
+		if (trash.contains(hover_x, hover_y)) {
 			setlinestyle(0, SOLID_LINE, 3);
 			setcolor(primary);
 			rectangle(trash.x - 5, trash.y - 5, trash.x + trash.size_x + 5, trash.y + trash.size_y + 5);
@@ -211,15 +202,19 @@ void MainGame() {
 			setlinestyle(0, SOLID_LINE, 1);
 		}
 
-		if (back.contains(last_mouse_x, last_mouse_y)) {
-			last_mouse_x = last_mouse_y = 0;
+
+
+		if (back.contains(mouse_x, mouse_y)) {
+			mouse_x = mouse_y = 0;
 			delete_variables();
 			delete []inputbuf;
 			delete []expresie;
 			delete temp;
 			return;
 		}
-		if (arbbuton.contains(last_mouse_x, last_mouse_y)) {
+		if (arbbuton.contains(mouse_x, mouse_y)) {
+
+			mouse_x = mouse_y = 0;
 			int current_window = getcurrentwindow();
 			if (temp == "")
 				console.log("No string to generate tree!", colors(secondary));
@@ -235,26 +230,25 @@ void MainGame() {
 				}
 				setcurrentwindow(current_window);
 			}
-			last_mouse_x = last_mouse_y = 0;
 		}
-		if (info.contains(last_mouse_x, last_mouse_y)) {
+		if (info.contains(mouse_x, mouse_y)) {
 			int current_window = getcurrentwindow();
 			info_s(); 
 			setcurrentwindow(current_window);
 			console.clear();
-			last_mouse_x = last_mouse_y = 0;
+			mouse_x = mouse_y = 0;
 		}
-		if (loadFromFile.contains(last_mouse_x, last_mouse_y)) {
-			string response;
-			char c;
-			bool overflow = false;
-			char buf[256];
+		if (loadFromFile.contains(mouse_x, mouse_y)) {
+			char c, buf[256];
 			GetCurrentDirectory(256, buf);
-			response = openDialog();
+			string response = openDialog();
 			SetCurrentDirectory(buf);
+
 			if (!response.empty()) {
+
 				console.clear();
 				reset(expresie, levelec, expresie_pos, temp);
+				overflow = false;
 				ifstream fin(response);
 				int level = 0, pos = 0;
 				levelec = expresie_pos = 0;
@@ -266,21 +260,20 @@ void MainGame() {
 						expresie_pos++;
 					}
 					if (pos > 33) {
-						levelec++;
-						level++;
-						expresie_pos = 0;
-						pos = 0;
+						level++; levelec++;
+						pos = 0; expresie_pos = 0;						
 					}
 				}
 				if (levelec >= 5) {
 					setcolor(WHITE);
 					outtextxy(910, 180 + 0, _strdup("Press 'Enter' to evaluate"));
 					outtextxy(910, 180 + 40, _strdup("Press the 'Trash' icon to delete"));
+					outtextxy(910, 180 + 80, _strdup("Press the 'File' icon to reupload"));
 					if (response.size() > 190) {
 						response = response.substr(0, 190);
 						response += "...";
 					}
-					console.log("Too much text for this window! Content from " + response + " saved in background!", colors(secondary));
+					console.log("Too much text for this window!   Content from " + response + " saved in background!", colors(secondary));
 					overflow = true;
 				}
 				loaded_from_file = true;
@@ -288,16 +281,18 @@ void MainGame() {
 				for(int i=0; i<levelec && !overflow; i++)
 					outtextxy(910, 180 + (i * 40), expresie[i]);
 			}
-			last_mouse_x = box_ecuatie.x + 10;
-			last_mouse_y = box_ecuatie.y + 10;
+			mouse_x = box_ecuatie.x + 10;
+			mouse_y = box_ecuatie.y + 10;
 		}
-		if (trash.contains(last_mouse_x, last_mouse_y)) {
+		if (trash.contains(mouse_x, mouse_y)) {
 			reset(expresie, levelec, expresie_pos, temp);
-			loaded_from_file = 0;
+			mouse_x = box_ecuatie.x + 10;
+			mouse_y = box_ecuatie.y + 10;
+			loaded_from_file = overflow = false;
 		}
 	
 		/// InputBox ul de variabile	
-		if (box_var.contains(last_mouse_x, last_mouse_y)) {
+		if (box_var.contains(mouse_x, mouse_y)) {
 			box_var.state = CLICKED;
 			setcolor(primary);
 			setlinestyle(0, SOLID_LINE, 3);
@@ -432,12 +427,11 @@ void MainGame() {
 
 				case 9: ///Tab
 					box_var.state = INACTIVE;
-					last_mouse_x = box_ecuatie.x + 10;
-					last_mouse_y = box_ecuatie.y + 10;
+					mouse_x = box_ecuatie.x + 10;
+					mouse_y = box_ecuatie.y + 10;
 					break;
 				default:
 					if (input_pos < 10000 && c >= ' ' && c <= '~' && level < 17) {
-						console.clear();
 						inputbuf[level][input_pos++] = c;
 						inputbuf[level][input_pos] = 0;
 					}
@@ -446,7 +440,7 @@ void MainGame() {
 		}
 	
 		/// InputBox ul de Expresie
-		if (box_ecuatie.contains(last_mouse_x, last_mouse_y)) {
+		if (box_ecuatie.contains(mouse_x, mouse_y)) {
 			box_ecuatie.state = CLICKED;
 			setcolor(primary);
 			setlinestyle(0, 0, 3);
@@ -468,7 +462,7 @@ void MainGame() {
 				ok = true;
 				setcolor(WHITE);
 				///Scriu expresia
-				if(!loaded_from_file) outtextxy(910, 180 + (levelec * 40), expresie[levelec]);
+				if(!overflow) outtextxy(910, 180 + (levelec * 40), expresie[levelec]);
 				
 				if (kbhit()) c = getch();
 				else break;
@@ -480,10 +474,15 @@ void MainGame() {
 				}
 				else if (expresie_pos > 33 && levelec == 6) expresie_pos = 33;
 					
-				if(!loaded_from_file || loaded_from_file && c == 13)
+				if(!loaded_from_file || loaded_from_file && !overflow || loaded_from_file && (c == 13 || c == 8))
 					switch (c) {
 					case 8: //backspace
 						console.clear();
+						if (overflow) {
+							reset(expresie, levelec, expresie_pos, temp);
+							loaded_from_file = overflow = false;
+							break;
+						}
 						if (expresie_pos > 0) {
 
 							///Sterg ultimul caracter
@@ -519,7 +518,6 @@ void MainGame() {
 							ok_expression = 1;
 						}
 						catch (invalid_argument& e) {
-							cout << temp << '\n';
 							string err = "Error: " + string(e.what());
 							console.log(err, colors(COLOR(236, 160, 64)));
 							ok_expression = 0;
@@ -533,8 +531,8 @@ void MainGame() {
 
 					case 9: ///Tab
 						box_ecuatie.state = INACTIVE;
-						last_mouse_x = box_var.x + 10;
-						last_mouse_y = box_var.y + 10;
+						mouse_x = box_var.x + 10;
+						mouse_y = box_var.y + 10;
 						break;
 
 					default:
@@ -588,9 +586,10 @@ void reset(char**& expresie, int& level, int& pos, char* temp) {
 }
 
 string openDialog() {
-	OPENFILENAME ofn;
+
+	OPENFILENAME ofn{};
 	char szFile[102400]{};
-	ZeroMemory(&ofn, sizeof(ofn));
+
 	ofn.lStructSize = sizeof(ofn);
 	ofn.lpstrFile = szFile;
 	ofn.nMaxFile = sizeof(szFile);

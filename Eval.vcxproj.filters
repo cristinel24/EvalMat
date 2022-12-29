@@ -39,9 +39,6 @@
     <ClInclude Include="include\Arbore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utilis.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\menu_back.h">
       <Filter>Header Files</Filter>
     </ClInclude>

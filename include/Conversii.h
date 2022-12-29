@@ -110,14 +110,19 @@ double valpostfix(coada& infix) {
 				val = (valst != valdr);
 			}
 			else {
-				throw invalid_argument("Invalid operator!");
+				throw invalid_argument("Invalid operator or operator missing!");
 			}
 			string val_s = to_string(val); //transform din double in string
 			S.push(val_s); //pun string in stiva
 		}
 	}
 	if(!S.empty()) x = S.top(); S.pop();
-	if(S.top()!="") throw invalid_argument("Invalid operator!"); //daca a mai ramas cv in stiva sigur nu e corect
+	if(S.top()!="") throw invalid_argument("Invalid operator or operator missing!"); //daca a mai ramas cv in stiva sigur nu e corect
+	if (x.size() > 16) {
+		string err = "Number '";
+		err += x.substr(0, 3) + "..." + x.substr(x.size() - 2, 2) + "' too big! 'double' : out of range!";
+		throw invalid_argument(err);
+	}
 	val = stod(x);
 	if (val == -0) val = 0;
 	return val;

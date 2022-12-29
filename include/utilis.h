@@ -8,6 +8,7 @@ const double midy = screen_height / 2;
 bool MainLoop, changeWin;
 
 enum State { INACTIVE, ACTIVE, HOVERED, CLICKED };
+enum Lang { EN, RO };
 struct Buton {
 	double x, y;
 	double size_x, size_y;

@@ -42,7 +42,11 @@ void init_coada(string x, coada& infix) {
                 if (esteOperator(string(1, aux[aux.size()-1]))) aux = aux.substr(0, aux.size() - 1);
                 while (x[i] && !esteOperator(string(1, x[i])) && (isalnum(x[i]) || x[i]=='_'))
                     aux += x[i++];
-                string invalid = "'" + aux + "'";
+                string err = "";
+                int i = 0;
+                while (aux[i] && (isalnum(aux[i]) || aux[i] == '_')) err += aux[i++];
+                    
+                string invalid = "'" + err + "'";
                 invalid += " was not defined!";
                 throw invalid_argument(invalid);
             }
@@ -190,15 +194,15 @@ void variables(string& x) {
         if (x.size() == 2) x.replace(x.find("pi"), 2, "(" + to_string(3.14159265359) + ")");
         else if (pifind == 0 && isalpha(x[pifind + 2]) || pifind > 0 && pifind < x.size() && isalpha(x[pifind + 2]) && isalpha(x[pifind - 1]) || pifind + 1 == x.size() && isalpha(x[pifind - 1]))
         { }
-        else x.replace(x.find("pi"), 2, "(" + to_string(3.14159265359) + ")");
+        else x.replace(pifind, 2, "(" + to_string(3.14159265359) + ")");
         pifind = x.find("pi", pifind + 1);
     }
     int efind = x.find("e");
     while (efind != string::npos) {
         if(x.size() == 1) x.replace(x.find("e"), 1, "(" + to_string(2.71828182846) + ")");
-        else if (efind == 0 && isalpha(x[efind + 1]) || efind > 0 && efind < x.size() && isalpha(x[efind + 1]) && isalpha(x[efind - 1]) || efind + 1 == x.size() && isalpha(x[efind - 1]))
+        else if (efind == 0 && isalnum(x[efind + 1]) || efind > 0 && efind < x.size() && isalnum(x[efind + 1]) && isalnum(x[efind - 1]) || efind + 1 == x.size() && isalpha(x[efind - 1]) || efind > 0 && efind < x.size() && (isalnum(x[efind-1]) && x[efind + 1] == ')' || isalnum(x[efind + 1]) && x[efind - 1] == '('))
         { }
-        else x.replace(x.find("e"), 1, "(" + to_string(2.71828182846) + ")");
+        else x.replace(efind, 1, "(" + to_string(2.71828182846) + ")");
         efind = x.find("e", efind + 1);
     }
    

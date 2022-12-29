@@ -99,6 +99,7 @@ int get_max_column(arb a) {
 arb initArb(string xarb) {
 	coada infix, postfix;
 	arb T = nullptr; string arr[NMAX];
+	spaces(xarb);
 	init_coada_arb(xarb, infix);
 	convInfix2Postfix_arb(infix, postfix);
 	return arb_gen(T, postfix);
@@ -122,7 +123,7 @@ void columns(arb a, int n_size, int c_size, int& contor) {
 	}
 }
 void linii(arb a, int n_size, int c_size) {
-	setlinestyle(0, SOLID_LINE, 5);
+	setlinestyle(0, SOLID_LINE, 2);
 	setcolor(COLOR(236, 160, 64));
 	
 	if (a != NULL) {
@@ -136,12 +137,16 @@ void linii(arb a, int n_size, int c_size) {
 void draw(string s, int niv, int col, int n_size, int c_size) {
 	setfillstyle(SOLID_FILL, COLOR(54, 114, 174));
 	int xc = col * c_size - c_size / 2, yc = niv * n_size - n_size / 2;
-	setcolor(COLOR(54, 114, 174));
+	setcolor(COLOR(236, 160, 64));
+	setbkcolor(COLOR(40, 41, 43)); 
 	setlinestyle(0, SOLID_LINE, 2);
+
 	int lg = s.size() * 5;
+	outtextxy(xc - 3 * lg / 4, yc - 8, _strdup(s.c_str()));
+
+	setcolor(COLOR(54, 114, 174));
 	ellipse(xc, yc, 0, 360, lg + 10, 10);
-	setbkcolor(COLOR(40, 41, 43)); setcolor(COLOR(236, 160, 64));
-	outtextxy(xc - 3*lg/4 , yc - 7, _strdup(s.c_str()));
+	
 
 	setcolor(COLOR(236, 160, 64));
 }

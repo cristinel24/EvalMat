@@ -22,7 +22,7 @@ void init_coada(string, coada&);
 
 int main()
 {
-    initwindow(screen_width, screen_height, "", 0, 0, 0, 0);
+    initwindow(screen_width, screen_height, "", -3, -3, 0, 0);
     Menu();
     
     //back();
