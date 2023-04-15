@@ -1,9 +1,0 @@
-﻿graphics.lib(dibutil.obj) : warning LNK4099: PDB 'bgi.pdb' was not found with 'graphics.lib(dibutil.obj)' or at 'C:\Users\crist\Documents\GitHub\EvalMat\Debug\bgi.pdb'; linking object as if no debug info
-graphics.lib(drawing.obj) : warning LNK4099: PDB 'bgi.pdb' was not found with 'graphics.lib(drawing.obj)' or at 'C:\Users\crist\Documents\GitHub\EvalMat\Debug\bgi.pdb'; linking object as if no debug info
-graphics.lib(file.obj) : warning LNK4099: PDB 'bgi.pdb' was not found with 'graphics.lib(file.obj)' or at 'C:\Users\crist\Documents\GitHub\EvalMat\Debug\bgi.pdb'; linking object as if no debug info
-graphics.lib(misc.obj) : warning LNK4099: PDB 'bgi.pdb' was not found with 'graphics.lib(misc.obj)' or at 'C:\Users\crist\Documents\GitHub\EvalMat\Debug\bgi.pdb'; linking object as if no debug info
-graphics.lib(mouse.obj) : warning LNK4099: PDB 'bgi.pdb' was not found with 'graphics.lib(mouse.obj)' or at 'C:\Users\crist\Documents\GitHub\EvalMat\Debug\bgi.pdb'; linking object as if no debug info
-graphics.lib(text.obj) : warning LNK4099: PDB 'bgi.pdb' was not found with 'graphics.lib(text.obj)' or at 'C:\Users\crist\Documents\GitHub\EvalMat\Debug\bgi.pdb'; linking object as if no debug info
-graphics.lib(winbgi.obj) : warning LNK4099: PDB 'bgi.pdb' was not found with 'graphics.lib(winbgi.obj)' or at 'C:\Users\crist\Documents\GitHub\EvalMat\Debug\bgi.pdb'; linking object as if no debug info
-graphics.lib(winthread.obj) : warning LNK4099: PDB 'bgi.pdb' was not found with 'graphics.lib(winthread.obj)' or at 'C:\Users\crist\Documents\GitHub\EvalMat\Debug\bgi.pdb'; linking object as if no debug info
-  Eval.vcxproj -> C:\Users\crist\Documents\GitHub\EvalMat\Debug\Eval.exe
