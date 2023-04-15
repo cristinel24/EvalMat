@@ -1,6 +1,6 @@
 # EvalMat
 
-> An evaluator of mathematical expressions written in C/C++ with UI for my faculty project.
+> An evaluator of mathematical expressions and tree expression maker written in C/C++ with UI for my faculty project.
 
 <img src="./Resources/screen.gif" width="800">
 
