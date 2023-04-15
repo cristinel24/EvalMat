@@ -7,8 +7,8 @@
 
 using namespace std;
 
-ifstream fin("eval.in");
-ofstream fout("eval.out");
+ifstream fin("input.in");
+ofstream fout("output.out");
 
 #include "Structuri.h"
 #include "Conversii.h"
@@ -24,14 +24,10 @@ int main()
 {
     initwindow(screen_width, screen_height, "", -3, -3, 0, 0);
     Menu();
-    
-    //back();
+    //back()
     return 0;
 }
 
-/// <summary>
-/// Functia back() e doar pentru testing
-/// </summary>
 void back() {
     string x, xarb;
     getline(fin, x);
