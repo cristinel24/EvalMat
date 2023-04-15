@@ -8,16 +8,16 @@
 
 Functions suported:
 
-`sin()`: Returns the sine of an angle of x radians.
-`cos()`: Returns the cosine of an angle of x radians.
-`tg()`: Returns the tangent of an angle of x radians.
-`lg()`: Returns the common (base-10) logarithm of x.
-`log2()`: Returns the binary (base-2) logarithm of x.
-`ln()`: Returns the natural logarithm of x.
-`sqrt()`: Returns the square root of x.
-`cbrt()`: Returns the cubic root of x.
-`round()`: Returns the integral value that is nearest to x, with halfway cases rounded away from zero.
-`ln()`: Returns the natural logarithm of x.
+`sin()`: Returns the sine of an angle of x radians.<br />
+`cos()`: Returns the cosine of an angle of x radians.<br />
+`tg()`: Returns the tangent of an angle of x radians.<br />
+`lg()`: Returns the common (base-10) logarithm of x.<br />
+`log2()`: Returns the binary (base-2) logarithm of x.<br />
+`ln()`: Returns the natural logarithm of x.<br />
+`sqrt()`: Returns the square root of x.<br />
+`cbrt()`: Returns the cubic root of x.<br />
+`round()`: Returns the integral value that is nearest to x, with halfway cases rounded away from zero.<br />
+`ln()`: Returns the natural logarithm of x.<br />
 
 
 <img src="./Resources/functions.png" width="450">
